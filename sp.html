@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Portfolio Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Basic Reset */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Roboto', sans-serif; background: #111; color: #fff; overflow-x:hidden; }
+
+  /* Container */
+  .container {
+    perspective: 1500px;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+  }
+
+  /* Card */
+  .card {
+    background: linear-gradient(135deg,#1f1f1f,#333);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+  }
+
+  /* Hover 3D effect */
+  .card:hover {
+    transform: rotateY(15deg) rotateX(10deg);
+  }
+
+  /* Header */
+  .card h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #00ffff;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #aaa;
+    margin-bottom: 20px;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 30px;
+  }
+
+  .section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #ffcc00;
+    position: relative;
+  }
+
+  .section h3::after {
+    content:'';
+    position:absolute;
+    width:50px;
+    height:3px;
+    background:#ffcc00;
+    left:0;
+    bottom:-5px;
+    border-radius:3px;
+  }
+
+  /* Skills bars */
+  .skill {
+    margin: 10px 0;
+  }
+
+  .skill-name {
+    display:flex;
+    justify-content:space-between;
+    font-weight:500;
+    margin-bottom:5px;
+  }
+
+  .skill-bar {
+    height: 10px;
+    border-radius: 5px;
+    background: #444;
+    overflow: hidden;
+  }
+
+  .skill-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg,#00ffff,#ffcc00);
+    border-radius:5px;
+    animation: fillBar 1.5s forwards;
+  }
+
+  @keyframes fillBar {
+    to { width: var(--skill-width); }
+  }
+
+  /* Buttons */
+  .btn {
+    display:inline-block;
+    padding:10px 25px;
+    margin-top:15px;
+    background:#00ffff;
+    color:#111;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    background: #ffcc00;
+  }
+
+  /* Contact links */
+  .contact {
+    display:flex;
+    gap:20px;
+  }
+
+  .contact a {
+    color:#00ffff;
+    transition: color 0.3s;
+  }
+
+  .contact a:hover {
+    color:#ffcc00;
+  }
+
+  /* Responsive */
+  @media(max-width:768px) {
+    .card {
+      padding:20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <!-- Header -->
+    <h1>Siddhant Patil</h1>
+    <h2>Full Stack Developer | 3D Portfolio Enthusiast</h2>
+
+    <!-- About -->
+    <div class="section">
+      <h3>About Me</h3>
+      <p>Hello! I'm a passionate developer who loves creating interactive and 3D web experiences. I specialize in modern CSS, JS, and web animations.</p>
+    </div>
+
+    <!-- Skills -->
+    <div class="section">
+      <h3>Skills</h3>
+      <div class="skill">
+        <div class="skill-name"><span>HTML & CSS</span><span>90%</span></div>
+        <div class="skill-bar"><span style="--skill-width:90%"></span></div>
+      </div>
+      <div class="skill">
+        <div class="skill-name"><span>JavaScript</span><span>85%</span></div>
+        <div class="skill-bar"><span style="--skill-width:85%"></span></div>
+      </div>
+      <div class="skill">
+        <div class="skill-name"><span>React & Next.js</span><span>75%</span></div>
+        <div class="skill-bar"><span style="--skill-width:75%"></span></div>
+      </div>
+      <div class="skill">
+        <div class="skill-name"><span>3D CSS & Animations</span><span>80%</span></div>
+        <div class="skill-bar"><span style="--skill-width:80%"></span></div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="section">
+      <h3>Projects</h3>
+      <ul>
+        <li>Interactive 3D Resume Web App</li>
+        <li>Dynamic Portfolio with CSS Animations</li>
+        <li>React-based Dashboard with 3D Cards</li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="section">
+      <h3>Contact</h3>
+      <div class="contact">
+        <a href="mailto:example@email.com">Email</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">GitHub</a>
+      </div>
+      <a class="btn" href="#">Download Resume</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Optional: Mouse move 3D tilt effect
+  const card = document.querySelector('.card');
+  document.addEventListener('mousemove', e => {
+    let x = (window.innerWidth / 2 - e.pageX) / 20;
+    let y = (window.innerHeight / 2 - e.pageY) / 20;
+    card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+  });
+  document.addEventListener('mouseleave', () => {
+    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+  });
+</script>
+
+</body>
+</html>
