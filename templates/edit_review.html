@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Review</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f6fa;
+padding:40px;
+}
+
+.review-box{
+max-width:600px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+textarea{
+height:120px;
+resize:none;
+}
+
+button{
+background:#2b7cff;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.cancel{
+background:#999;
+text-decoration:none;
+padding:10px 20px;
+color:white;
+border-radius:6px;
+margin-left:10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="review-box">
+
+<h2>Edit Review</h2>
+
+<form method="POST">
+
+<input type="text" name="name" value="{{ review.name }}" required>
+
+<select name="rating" required>
+
+<option value="5" {% if review.rating==5 %}selected{% endif %}>⭐⭐⭐⭐⭐</option>
+<option value="4" {% if review.rating==4 %}selected{% endif %}>⭐⭐⭐⭐</option>
+<option value="3" {% if review.rating==3 %}selected{% endif %}>⭐⭐⭐</option>
+<option value="2" {% if review.rating==2 %}selected{% endif %}>⭐⭐</option>
+<option value="1" {% if review.rating==1 %}selected{% endif %}>⭐</option>
+
+</select>
+
+<textarea name="review">{{ review.review }}</textarea>
+
+<button type="submit">Update Review</button>
+
+<a href="/product/{{ review.product_id }}" class="cancel">Cancel</a>
+
+</form>
+
+</div>
+
+</body>
+</html>

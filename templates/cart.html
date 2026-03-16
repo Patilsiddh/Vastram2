@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="/static/css/style.css">
+
+<div class="navbar">
+  <div>Royal Ethnic Wear</div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/wishlist">Wishlist 🧡 <span id="wishCount" class="badge">{{ wish_count or 0 }}</span></a>
+    <a href="/cart">Cart 🛒 <span id="cartCount" class="badge">{{ cart_count or 0 }}</span></a>
+  </div>
+</div>
+
+<div class="main-container" style="flex-direction:column; padding:20px 50px;">
+  <h2>My Cart</h2>
+  <a href="/" class="btn" style="margin-bottom:20px;">Back to Shop</a>
+
+  <div id="cart-container">
+    {% if items %}
+      {% for item in items %}
+        <div class="cart-item" style="border:1px solid #ccc;padding:15px;margin-bottom:15px; display:flex;">
+
+          <!-- Product Image -->
+          <div style="margin-right:20px;">
+            {% if item['image'] %}
+              <img src="/static/uploads/{{ item['image'] }}" width="120">
+            {% else %}
+              <div style="width:120px;height:120px;background:#eee;text-align:center;line-height:120px;">No Image</div>
+            {% endif %}
+          </div>
+
+          <!-- Product Info -->
+          <div style="flex:1;">
+  <h3>{{ item["name"] }}</h3>
+
+  {% if item["description"] %}
+  <p>{{ item["description"] }}</p>
+  {% endif %}
+
+  {% if item["cloth_type"] %}
+  <p>Cloth: {{ item["cloth_type"] }}</p>
+  {% endif %}
+
+  {% if item["material"] %}
+  <p>Material: {{ item["material"] }}</p>
+  {% endif %}
+
+  {% if item["color"] %}
+  <p>Color: {{ item["color"] }}</p>
+  {% endif %}
+
+  {% if item["occasion"] %}
+  <p>Occasion: {{ item["occasion"] }}</p>
+  {% endif %}
+
+  {% if item["selected_size"] %}
+  <p>Size: <span class="selected-size">{{ item["selected_size"] }}</span></p>
+  {% endif %}
+
+  <p>Price: ₹<span class="price">{{ item["price"] }}</span></p>
+
+  <p>
+    Qty:
+    <input type="number" class="qty" value="{{ item['qty'] }}" min="1" style="width:60px;">
+  </p>
+
+  <p>Total: ₹<span class="total">{{ (item["price"]*item["qty"]) }}</span></p>
+
+  <form action="/remove_cart/{{ item['cart_id'] }}" method="POST">
+    <button class="btn remove-btn">Remove ❌</button>
+  </form>
+</div>
+        </div>
+      {% endfor %}
+
+      <!-- Grand Total -->
+      <h3>Grand Total: ₹<span id="grand-total">{{ grand }}</span></h3>
+
+      <!-- Checkout -->
+      <form action="/checkout" method="POST">
+        {% for item in items %}
+          <input type="hidden" name="product_ids" value="{{ item['product_id'] }}">
+          <input type="hidden" name="quantities" value="{{ item['qty'] }}">
+        {% endfor %}
+        <button type="submit" class="btn" style="background:#28a745; margin-top:20px;">
+          Checkout Now 🛒
+        </button>
+      </form>
+
+    {% else %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function updateTotals() {
+    let grand = 0;
+    document.querySelectorAll(".cart-item").forEach(item => {
+      const price = parseFloat(item.querySelector(".price").textContent);
+      const qty = parseInt(item.querySelector(".qty").value);
+      const total = price * qty;
+      item.querySelector(".total").textContent = total.toFixed(2);
+      grand += total;
+    });
+    const g = document.getElementById("grand-total");
+    if (g) g.textContent = grand.toFixed(2);
+  }
+
+  updateTotals();
+
+  document.querySelectorAll(".qty").forEach(input => {
+    input.addEventListener("input", updateTotals);
+  });
+});
+</script>
+<style>/* NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#111;
+color:white;
+font-size:18px;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+position:relative;
+}
+
+.badge{
+background:red;
+color:white;
+padding:2px 7px;
+border-radius:50%;
+font-size:12px;
+margin-left:5px;
+}
+
+/* CART PAGE */
+.main-container{
+max-width:1100px;
+margin:auto;
+}
+
+/* CART ITEM */
+.cart-item{
+display:flex;
+gap:20px;
+background:white;
+border-radius:10px;
+padding:15px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* IMAGE */
+.cart-item img{
+border-radius:8px;
+}
+
+/* PRODUCT INFO */
+.cart-item h3{
+margin:0;
+font-size:20px;
+}
+
+.cart-item p{
+margin:5px 0;
+font-size:14px;
+}
+
+/* SIZE BADGE */
+.selected-size{
+display:inline-block;
+padding:4px 10px;
+background:#111;
+color:white;
+border-radius:5px;
+font-size:13px;
+margin-left:5px;
+}
+
+/* QTY INPUT */
+.qty{
+padding:5px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+/* PRICE */
+.price{
+font-weight:bold;
+color:#28a745;
+}
+
+.total{
+font-weight:bold;
+color:#111;
+}
+
+/* BUTTON */
+.btn{
+padding:8px 15px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-size:14px;
+}
+
+.remove-btn{
+background:#b30000;
+color:white;
+}
+
+.remove-btn:hover{
+background:#900000;
+}
+
+/* GRAND TOTAL */
+#grand-total{
+font-size:22px;
+color:#28a745;
+font-weight:bold;
+}</style>

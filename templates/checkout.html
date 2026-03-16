@@ -1,0 +1,144 @@
+<link rel="stylesheet" href="/static/css/style.css">
+
+<h2>Checkout</h2>
+<a href="/cart" class="btn">Back to Cart</a>
+
+{% if items %}
+
+<form action="/checkout" method="POST" id="orderForm">
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; margin-bottom:20px;">
+<thead>
+<tr>
+<th>Sr No</th>
+<th>Product</th>
+<th>Image</th>
+<th>Size</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for item in items %}
+
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ item['name'] }}</td>
+
+<td>
+{% if item['image'] %}
+<img src="/static/uploads/{{ item['image'] }}" width="60">
+{% else %}
+No Image
+{% endif %}
+</td>
+
+<td>{{ item['size'] }}</td>
+<td>{{ item['qty'] }}</td>
+
+<td>₹{{ item['price'] }}</td>
+<td>₹{{ item['price'] * item['qty'] }}</td>
+</tr>
+
+<input type="hidden" name="product_ids[]" value="{{ item['product_id'] }}">
+<input type="hidden" name="quantities[]" value="{{ item['qty'] }}">
+<input type="hidden" name="sizes[]" value="{{ item['size'] }}">
+
+{% endfor %}
+
+</tbody>
+</table>
+
+<h3>Grand Total: ₹{{ grand_total }}</h3>
+
+<hr>
+
+<h3>Customer Details</h3>
+
+<input type="text" name="name" placeholder="Full Name" required><br><br>
+
+<input type="text" name="phone" placeholder="Phone" required><br><br>
+
+<textarea name="address" placeholder="Delivery Address" required></textarea>
+
+<hr>
+
+<h3>Select Payment</h3>
+
+<label>
+<input type="radio" name="pay" value="online" onclick="fullPayment()">
+100% Online Payment
+</label>
+
+<br><br>
+
+<label>
+<input type="radio" name="pay" value="cod" onclick="codPayment()">
+Cash on Delivery (80% Advance Required)
+</label>
+
+<br><br>
+
+<label>
+<input type="radio" name="pay" value="call" onclick="hideAdvance()">
+Call Owner
+</label>
+
+<div id="advanceSection" style="display:none;border:1px solid #ddd;padding:15px;margin-top:10px;">
+
+<p>Total Order : ₹{{ grand_total }}</p>
+
+<p>Advance (80%) : <b>₹{{ grand_total * 0.8 }}</b></p>
+
+<p>Remaining COD : <b>₹{{ grand_total * 0.2 }}</b></p>
+
+<button type="button" onclick="payAdvance()" style="background:#ff9800;color:white;padding:10px;border:none;">
+Pay 80% Advance
+</button>
+
+</div>
+
+<br>
+
+<button id="placeOrderBtn" type="submit" disabled
+style="background:#28a745;color:white;padding:12px;border:none;border-radius:5px;">
+Place Order
+</button>
+
+</form>
+
+{% else %}
+
+<p>Your cart is empty.</p>
+
+{% endif %}
+
+<script>
+
+function codPayment(){
+document.getElementById("advanceSection").style.display="block";
+document.getElementById("placeOrderBtn").disabled=true;
+}
+
+function fullPayment(){
+document.getElementById("advanceSection").style.display="none";
+document.getElementById("placeOrderBtn").disabled=false;
+}
+
+function hideAdvance(){
+document.getElementById("advanceSection").style.display="none";
+document.getElementById("placeOrderBtn").disabled=false;
+}
+
+function payAdvance(){
+
+alert("Payment Successful");
+
+document.getElementById("placeOrderBtn").disabled=false;
+
+}
+
+</script>

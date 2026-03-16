@@ -1,0 +1,25 @@
+<h2>Order Preview</h2>
+
+<div class="preview-card">
+
+<img src="/static/uploads/{{ product.image }}" width="200">
+
+<h3>{{ product.name }}</h3>
+
+<p>Size: {{ size }}</p>
+
+<p>Price: ₹{{ product.discount_price or product.price }}</p>
+
+<button onclick="goCheckout()">Proceed to Checkout →</button>
+
+</div>
+
+<script>
+
+function goCheckout(){
+
+window.location.href="/checkout?product_id={{ product.id }}&size={{ size }}";
+
+}
+
+</script>

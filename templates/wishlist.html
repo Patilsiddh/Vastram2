@@ -1,0 +1,744 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>/* GLOBAL */
+
+*{
+box-sizing:border-box;
+}
+
+body{
+background:#f5f7fa;
+font-family:Segoe UI, Roboto, sans-serif;
+margin:0;
+}
+
+/* HEADER */
+
+.top-header{
+background:white;
+border-bottom:1px solid #eee;
+}
+
+.header-container{
+max-width:1200px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+}
+
+.brand h1{
+margin:0;
+font-size:22px;
+}
+
+.brand span{
+font-size:12px;
+color:#666;
+}
+
+.search-bar{
+padding:8px 12px;
+border-radius:6px;
+border:1px solid #ddd;
+width:220px;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 40px;
+background:#111;
+color:white;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.nav-links a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+font-size:15px;
+transition:.3s;
+}
+
+.nav-links a:hover{
+color:#ffd700;
+}
+
+.badge{
+background:#ff3b3b;
+padding:3px 8px;
+border-radius:50%;
+font-size:12px;
+margin-left:5px;
+}
+
+/* PAGE */
+
+.page-wrapper{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+/* TITLE */
+
+.page-title{
+font-size:28px;
+margin-bottom:10px;
+}
+
+/* BACK */
+
+.back-btn{
+display:inline-block;
+margin-bottom:20px;
+color:#2b7cff;
+text-decoration:none;
+font-weight:500;
+}
+
+/* GRID */
+
+.wishlist-container{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+gap:22px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+transition:.3s;
+display:flex;
+flex-direction:column;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 12px 20px rgba(0,0,0,.12);
+}
+
+/* IMAGE */
+
+.img-box img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.no-img{
+height:200px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#eee;
+border-radius:8px;
+}
+
+/* TEXT */
+
+.card h3{
+font-size:16px;
+margin:10px 0;
+min-height:40px;
+}
+
+.price-box{
+font-weight:600;
+color:#b30000;
+}
+
+/* SIZE */
+
+.size-box{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+margin:10px 0;
+}
+
+.size-btn{
+border:1px solid #222;
+padding:5px 10px;
+font-size:12px;
+cursor:pointer;
+border-radius:4px;
+transition:.2s;
+}
+
+.size-btn:hover{
+background:#111;
+color:white;
+}
+
+.size-btn.active{
+background:#111;
+color:white;
+}
+
+/* BUTTONS */
+
+.actions{
+display:flex;
+gap:6px;
+margin-top:10px;
+}
+
+.btn{
+flex:1;
+padding:7px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
+transition:.3s;
+}
+
+.view-btn{
+background:#333;
+color:white;
+}
+
+.view-btn:hover{
+background:#000;
+}
+
+.add-cart{
+background:#28a745;
+color:white;
+}
+
+.add-cart:hover{
+background:#1f8a36;
+}
+
+.remove-wish{
+background:#b30000;
+color:white;
+}
+
+.remove-wish:hover{
+background:#7d0000;
+}
+
+/* EMPTY */
+
+.empty-msg{
+font-size:18px;
+color:#777;
+}
+
+/* FOOTER */
+
+.site-footer{
+background:#111;
+color:white;
+margin-top:50px;
+padding:40px 20px;
+}
+
+.footer-grid{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:30px;
+}
+
+.footer-grid a{
+display:block;
+color:#ccc;
+text-decoration:none;
+margin-top:6px;
+}
+
+.footer-grid a:hover{
+color:white;
+}
+
+.footer-bottom{
+text-align:center;
+margin-top:30px;
+font-size:13px;
+color:#aaa;
+}
+
+/* SCROLL BUTTON */
+
+#scrollTopBtn{
+position:fixed;
+bottom:30px;
+right:30px;
+background:#111;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:50%;
+font-size:16px;
+cursor:pointer;
+display:none;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:10px;
+}
+
+.actions{
+flex-direction:column;
+}
+
+}</style>
+<div class="navbar">
+  <div class="logo">Royal Ethnic Wear</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    
+    <a href="/cart">Cart 🛒 
+      <span id="cartCount" class="badge">{{ cart_count }}</span>
+    </a>
+
+    <a href="/wishlist">Wishlist 🧡 
+      <span id="wishCount" class="badge">{{ wish_count or 0 }}</span>
+    </a>
+  </div>
+</div>
+
+
+<script>
+function clearWishlist(){
+    fetch("/clear_wishlist")
+    .then(res => res.json())
+    .then(data => {
+        location.reload(); // refresh page
+    });
+}
+</script>
+<div class="page-wrapper">
+
+<h2 class="page-title">Your Wishlist</h2>
+
+<a href="javascript:history.back()" class="back-btn">← Back</a>
+
+<div id="wishlist-container">
+
+<div class="wishlist-container">
+
+{% if products %}
+{% for p in products %}
+
+<div class="card" data-id="{{ p.id }}" data-baseprice="{{ p.price }}">
+
+<!-- IMAGE -->
+<div class="img-box">
+{% if p.image %}
+<img src="/static/uploads/{{ p.image }}" alt="{{ p.name }}">
+{% else %}
+<div class="no-img">No Image</div>
+{% endif %}
+</div>
+
+<h3>{{ p.name }}</h3>
+
+<p class="price-box">
+Price: ₹<span class="price">{{ p.price }}</span>
+</p>
+
+<!-- SIZE -->
+{% if p.sizes %}
+<div class="size-box">
+
+<input type="hidden" class="selected-size">
+
+{% for s in p.sizes %}
+<div class="size-btn"
+     data-size="{{ s.size }}"
+     data-extra="{{ s.extra_price }}"
+     onclick="selectSizeWishlist(this)">
+  {{ s.size }}
+</div>
+{% endfor %}
+
+</div>
+{% endif %}
+
+<!-- ACTION BUTTONS -->
+<div class="actions">
+
+<a href="/product/{{ p.id }}" class="btn view-btn">
+View
+</a>
+
+<button class="btn add-cart" data-id="{{ p.id }}">
+Add to Cart
+</button>
+
+<button class="btn remove-wish" data-id="{{ p.id }}">
+Remove
+</button>
+
+</div>
+
+</div>
+
+{% endfor %}
+{% else %}
+<p class="empty-msg">Your wishlist is empty.</p>
+{% endif %}
+
+</div>
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<div class="footer-grid">
+
+<div>
+<h3>Royal Ethnic Wear</h3>
+<p>Premium traditional wear crafted with style and elegance.</p>
+</div>
+
+<div>
+<h4>Quick Links</h4>
+<a href="/">Home</a>
+<a href="/wishlist">Wishlist</a>
+<a href="/cart">Cart</a>
+</div>
+
+<div>
+<h4>Customer Support</h4>
+<p>Email: support@royalwear.com</p>
+<p>Phone: +91 9876543210</p>
+</div>
+
+</div>
+
+<p class="footer-bottom">© 2026 Royal Ethnic Wear. All rights reserved.</p>
+
+</footer>
+
+
+<script>
+
+function selectSizeWishlist(el){
+
+    const card = el.closest(".card");
+    const basePrice = parseFloat(card.dataset.baseprice || 0);
+    const extra = parseFloat(el.dataset.extra || 0);
+
+    const parent = el.closest(".size-box");
+
+    parent.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+    el.classList.add("active");
+
+    const sizeInput = parent.querySelector(".selected-size");
+    if(sizeInput){
+        sizeInput.value = el.dataset.size;
+    }
+
+    const newPrice = basePrice + extra;
+
+    const priceEl = card.querySelector(".price");
+    if(priceEl){
+        priceEl.innerText = newPrice.toFixed(2);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const cartBadge = document.getElementById("cartCount");
+const wishBadge = document.getElementById("wishCount");
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
+document.querySelectorAll(".add-cart").forEach(btn=>{
+
+btn.addEventListener("click", function(){
+
+const card = this.closest(".card");
+const productId = card.dataset.id;
+
+const sizeInput = card.querySelector(".selected-size");
+const size = sizeInput ? sizeInput.value : "";
+
+if(!size){
+alert("Select size first");
+return;
+}
+
+fetch(`/add_to_cart/${productId}`,{
+method:"POST",
+headers:{'Content-Type':'application/x-www-form-urlencoded'},
+body:`size=${size}`
+})
+.then(r=>r.json())
+.then(data=>{
+
+if(data.status==="success"){
+
+cartBadge.innerText = data.cart_count;
+
+btn.innerText="Added ✔";
+btn.disabled=true;
+
+}else{
+
+alert(data.message || "Error adding to cart");
+
+}
+
+});
+
+});
+
+});
+
+
+/* =========================
+   REMOVE FROM WISHLIST
+========================= */
+
+document.querySelectorAll(".remove-wish").forEach(btn=>{
+
+btn.addEventListener("click", function(){
+
+const card = this.closest(".card");
+const productId = card.dataset.id;
+
+fetch(`/remove_wishlist/${productId}`)
+.then(r=>r.json())
+.then(data=>{
+
+if(data.status === "success"){
+
+card.remove();
+
+wishBadge.innerText = data.wish;
+
+/* If wishlist becomes empty show message */
+
+if(data.wish === 0){
+
+document.getElementById("wishlist-container").innerHTML =
+"<p class='empty-msg'>Your wishlist is empty.</p>";
+
+}
+
+}
+
+});
+
+});
+
+});
+
+});
+
+</script>
+
+<style>
+
+/* PAGE */
+body{
+background:#f4f6f8;
+font-family:Roboto, sans-serif;
+}
+
+.page-wrapper{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#111;
+color:white;
+}
+
+.logo{
+font-size:20px;
+font-weight:600;
+}
+
+.nav-links a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+font-size:15px;
+}
+
+.badge{
+background:red;
+color:white;
+padding:2px 7px;
+border-radius:50%;
+font-size:12px;
+margin-left:5px;
+}
+
+
+/* TITLE */
+
+.page-title{
+margin:20px 0;
+font-size:26px;
+}
+
+/* BACK */
+
+.back-btn{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#2b7cff;
+font-weight:500;
+}
+
+/* GRID */
+
+.wishlist-container{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+gap:20px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+transition:0.3s;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+/* IMAGE */
+
+.img-box img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.no-img{
+width:100%;
+height:180px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#eee;
+border-radius:8px;
+color:#777;
+}
+
+/* PRODUCT TEXT */
+
+.card h3{
+font-size:16px;
+margin:10px 0;
+min-height:40px;
+}
+
+.price-box{
+font-weight:600;
+margin-bottom:10px;
+}
+
+/* SIZE */
+
+.size-box{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+margin-bottom:10px;
+}
+
+.size-btn{
+border:1px solid #333;
+padding:5px 10px;
+font-size:12px;
+cursor:pointer;
+border-radius:4px;
+}
+
+.size-btn.active{
+background:#111;
+color:white;
+}
+
+/* BUTTONS */
+
+.actions{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.btn{
+flex:1;
+padding:6px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-size:13px;
+text-align:center;
+}
+
+.view-btn{
+background:#333;
+color:white;
+}
+
+.add-cart{
+background:#28a745;
+color:white;
+}
+
+.remove-wish{
+background:#b30000;
+color:white;
+}
+
+/* EMPTY */
+
+.empty-msg{
+font-size:18px;
+color:#777;
+}
+
+</style>
