@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Product</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f4f6f8; }
+        h2 { color: #333; }
+        a, button { padding: 8px 12px; margin: 5px; border-radius: 5px; text-decoration: none; }
+        button { background: #dc3545; color: white; border: none; cursor: pointer; }
+        a { background: #2b7cff; color: white; }
+    </style>
+</head>
+<body>
+
+<h2>Are you sure you want to delete product: "{{ product[1] }}"?</h2>
+
+<form method="post" action="/admin/delete_product/{{ product[0] }}">
+    <button type="submit">Yes, Delete</button>
+    <a href="/admin/dashboard">Cancel</a>
+</form>
+
+</body>
+</html>

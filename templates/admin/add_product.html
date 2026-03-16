@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Product</title>
+
+<style>
+
+body{
+font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+background:#f4f6f8;
+margin:0;
+}
+
+.container{
+max-width:900px;
+margin:30px auto;
+background:#fff;
+padding:25px;
+border-radius:10px;
+box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.container h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input,textarea,select{
+padding:8px 10px;
+margin-bottom:12px;
+border:1px solid #d1d5db;
+border-radius:6px;
+font-size:14px;
+width:100%;
+}
+
+button{
+background:#3b82f6;
+color:#fff;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+.sizes-container{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.size-row{
+display:flex;
+align-items:center;
+gap:5px;
+}
+
+.size-label{
+width:30px;
+font-weight:bold;
+}
+
+.size-stock,.size-extra{
+width:80px;
+}
+
+.totals{
+margin-bottom:15px;
+font-weight:bold;
+}
+
+.extra-image-row{
+display:flex;
+gap:10px;
+margin-bottom:8px;
+align-items:center;
+}
+
+.modal{
+display:none;
+position:fixed;
+z-index:999;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+}
+
+.modal-content{
+background:#fff;
+margin:15% auto;
+padding:30px;
+border-radius:10px;
+width:350px;
+text-align:center;
+box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-buttons{
+display:flex;
+justify-content:space-around;
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Add Product</h2>
+
+<form id="productForm" method="POST" enctype="multipart/form-data">
+
+<input type="text" name="name" placeholder="Product Name" required>
+
+<textarea name="description" placeholder="Product Description"></textarea>
+
+<select name="category_id" required>
+<option value="">Select Category</option>
+{% for c in categories %}
+<option value="{{ c['id'] }}">{{ c['name'] }}</option>
+{% endfor %}
+</select>
+
+<div class="pricing-group">
+
+<input type="number" step="0.01" id="mrp" name="mrp" placeholder="Original Price">
+
+<input type="number" step="0.01" id="discount" name="discount_percent" placeholder="Discount %">
+
+<input type="number" step="0.01" id="price" name="price" placeholder="Selling Price" readonly>
+
+</div>
+
+
+<h3>Sizes</h3>
+
+<div class="sizes-container">
+
+{% for s in ['S','M','L','XL','XXL','3XL','4XL','5XL'] %}
+
+<div class="size-row">
+
+<span class="size-label">{{ s }}</span>
+
+<input type="number" name="stock_{{ s }}" placeholder="Stock" class="size-stock">
+
+<input type="number" step="0.01" name="price_{{ s }}" placeholder="Extra Price" class="size-extra">
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<div class="totals">
+
+Total Stock: <span id="total_stock">0</span> |
+
+Total Extra Price: ₹<span id="total_extra">0.00</span>
+
+</div>
+
+
+<input type="text" name="cloth_type" placeholder="Cloth Type">
+
+<input type="text" name="material" placeholder="Material">
+
+<input type="text" name="occasion" placeholder="Occasion">
+
+<input type="text" name="color" placeholder="Color">
+
+
+<h4>Product Images</h4>
+
+<label>Front Images</label>
+<input type="file" name="front_images" multiple>
+
+<label>Back Images</label>
+<input type="file" name="back_images" multiple>
+
+
+<div id="extra-image-container">
+
+<label>Extra Images</label>
+
+<div class="extra-image-row">
+
+<input type="file" name="extra_images[]" multiple>
+
+<input type="text" name="extra_label[]" placeholder="Image label (optional)">
+
+</div>
+
+</div>
+
+
+<button type="button" id="addExtraImageBtn">➕ Add More Extra Images</button>
+
+<br><br>
+
+<button type="submit" id="submitBtn">Save Product</button>
+
+</form>
+
+</div>
+
+
+
+<div id="successModal" class="modal">
+
+<div class="modal-content">
+
+<h3>🎉 Product Successfully Added!</h3>
+
+<p>What do you want to do next?</p>
+
+<div class="modal-buttons">
+
+<button id="addNewBtn">Add New Product</button>
+
+<button id="dashboardBtn">Go to Admin Dashboard</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ADD EXTRA IMAGE INPUT */
+
+document.getElementById("addExtraImageBtn").addEventListener("click",function(){
+
+let container=document.getElementById("extra-image-container");
+
+let div=document.createElement("div");
+
+div.classList.add("extra-image-row");
+
+let file=document.createElement("input");
+file.type="file";
+file.name="extra_images[]";
+file.multiple=true;
+
+let label=document.createElement("input");
+label.type="text";
+label.name="extra_label[]";
+label.placeholder="Image label (optional)";
+
+div.appendChild(file);
+div.appendChild(label);
+
+container.appendChild(div);
+
+});
+
+
+
+/* PRICE CALCULATION */
+
+function calculatePrice(){
+
+let mrp=parseFloat(document.getElementById("mrp").value)||0;
+
+let discount=parseFloat(document.getElementById("discount").value)||0;
+
+let selling=mrp-(mrp*discount/100);
+
+document.getElementById("price").value=selling.toFixed(2);
+
+}
+
+document.getElementById("mrp").addEventListener("input",calculatePrice);
+document.getElementById("discount").addEventListener("input",calculatePrice);
+
+
+
+/* TOTAL STOCK */
+
+function calculateTotals(){
+
+let stocks=document.querySelectorAll(".size-stock");
+let extras=document.querySelectorAll(".size-extra");
+
+let totalStock=0;
+let totalExtra=0;
+
+stocks.forEach((s,i)=>{
+
+let val=parseInt(s.value)||0;
+let extra=parseFloat(extras[i].value)||0;
+
+totalStock+=val;
+
+totalExtra+=(val*extra);
+
+});
+
+document.getElementById("total_stock").innerText=totalStock;
+
+document.getElementById("total_extra").innerText=totalExtra.toFixed(2);
+
+}
+
+document.querySelectorAll(".size-stock,.size-extra").forEach(input=>{
+input.addEventListener("input",calculateTotals);
+});
+
+
+
+/* FORM SUBMIT */
+
+document.getElementById("productForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+document.getElementById("submitBtn").disabled=true;
+
+let form=e.target;
+
+let formData=new FormData(form);
+
+fetch(form.action,{
+method:form.method,
+body:formData
+})
+.then(res=>res.text())
+.then(data=>{
+document.getElementById("successModal").style.display="block";
+})
+.catch(err=>{
+alert("Error saving product "+err);
+});
+
+});
+
+
+/* MODAL BUTTONS */
+
+document.getElementById("addNewBtn").addEventListener("click",function(){
+window.location.reload();
+});
+
+document.getElementById("dashboardBtn").addEventListener("click",function(){
+window.location.href="/admin/dashboard";
+});
+
+</script>
+
+</body>
+</html>
