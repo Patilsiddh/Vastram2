@@ -70,6 +70,48 @@
   gap: 25px;
   padding: 20px 40px;
 }
+/* ==================== PRICE FILTER INLINE ==================== */
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 15px 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.categories strong { color:#498ff1; font-size:16px; margin-right:5px; }
+
+#priceRange-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#priceRange {
+  width: 150px;  /* smaller width */
+  height: 6px;
+  cursor: pointer;
+}
+
+#priceValue {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media(max-width:768px) {
+  #priceRange {
+    width: 120px;
+  }
+  #priceValue {
+    font-size: 13px;
+  }
+}
 @media(max-width:1024px){ .products { grid-template-columns: repeat(2, 1fr); } }
 @media(max-width:768px){ .products { grid-template-columns: 1fr; } }
 
