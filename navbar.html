@@ -1,0 +1,288 @@
+<style>
+/* ==================== RESET ==================== */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: 'Roboto', sans-serif; 
+}
+
+body {
+     
+  background: #f8f8f8; 
+  color: #333; 
+  line-height: 1.6; 
+  overflow-x: hidden; /* prevent left-right movement */
+}
+
+a { 
+  text-decoration: none; 
+  color: inherit; 
+  transition: 0.3s; 
+}
+
+ul { 
+  list-style: none; 
+}
+
+img { 
+  display: block; 
+  max-width: 100%; 
+  height: auto; /* responsive images */
+}
+
+button { 
+  cursor: pointer; 
+  outline: none; 
+}
+
+input, textarea { 
+  font-family: 'Roboto', sans-serif; 
+  width: 100%; /* better responsiveness */
+}
+
+
+/* NAVBAR WRAPPER */
+.arv-navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 50px;
+
+    /* Light brown gradient */
+    background: linear-gradient(135deg, #f5e6d3, #d2a679);
+
+    /* Transparent glass effect */
+    backdrop-filter: blur(10px);
+    background-color: rgba(210, 166, 121, 0.8);
+
+    color:#2b2b2b;
+
+    position:sticky;
+    top:0;
+    z-index:999;
+
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* NAVBAR SCROLL EFFECT */
+.arv-navbar.scrolled{
+    background: rgba(210,166,121,0.95);
+    box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* LEFT LOGO AREA */
+.arv-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.arv-brand img{
+    height:55px; /* bigger logo */
+    transition: transform 0.3s ease;
+}
+
+.arv-brand img:hover{
+    transform: scale(1.1);
+}
+
+/* BRAND NAME */
+.arv-brand-name{
+    font-size:22px;
+    font-weight:700;
+    color:#3b2a1a;
+    letter-spacing:1px;
+}
+
+/* MENU LINKS */
+.arv-menu{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+/* LINKS STYLE */
+.arv-menu a{
+    color:#1e1a16;
+    text-decoration:none;
+    font-size:16px;
+    font-weight:500;
+    position:relative;
+    transition: all 0.3s ease;
+}
+
+/* HOVER EFFECT (underline animation) */
+.arv-menu a::after{
+    content:"";
+    position:absolute;
+    width:0%;
+    height:2px;
+    bottom:-5px;
+    left:0;
+    background:#8b5e34;
+    transition:0.3s;
+}
+
+.arv-menu a:hover::after{
+    width:100%;
+}
+
+/* HOVER COLOR CHANGE */
+.arv-menu a:hover{
+    color:#8b5e34;
+}
+
+/* BADGE */
+.arv-badge{
+    background:#ff4d4d;
+    color:white;
+    padding:3px 7px;
+    border-radius:50%;
+    font-size:12px;
+    margin-left:5px;
+}
+
+/* HAMBURGER */
+.arv-hamburger{
+    display:none;
+    flex-direction:column;
+    cursor:pointer;
+    gap:5px;
+}
+
+.arv-hamburger span{
+    width:26px;
+    height:3px;
+    background:#3b2a1a;
+    border-radius:3px;
+    transition:0.3s;
+}
+
+/* HAMBURGER ANIMATION */
+.arv-hamburger.active span:nth-child(1){
+    transform: rotate(45deg) translate(5px,5px);
+}
+.arv-hamburger.active span:nth-child(2){
+    opacity:0;
+}
+.arv-hamburger.active span:nth-child(3){
+    transform: rotate(-45deg) translate(6px,-6px);
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.arv-menu{
+    position:absolute;
+    top:75px;
+    right:0;
+
+    /* Soft brown card */
+    background: linear-gradient(135deg, #f5e6d3, #d2a679);
+
+    flex-direction:column;
+    width:240px;
+    padding:20px;
+
+    display:none;
+    border-radius:0 0 0 15px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+
+    animation: slideDown 0.3s ease;
+}
+
+.arv-menu a{
+    padding:10px 0;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+}
+
+.arv-menu.active{
+    display:flex;
+}
+
+.arv-hamburger{
+    display:flex;
+}
+
+/* Animation */
+@keyframes slideDown{
+    from{
+        opacity:0;
+        transform: translateY(-20px);
+    }
+    to{
+        opacity:1;
+        transform: translateY(0);
+    }
+}
+
+}
+</style>
+
+
+<div class="arv-navbar">
+
+<!-- LEFT SIDE LOGO -->
+
+<div class="arv-brand">
+<a href="/">
+<img src="{{ url_for('static', filename='uploads/Logo-removebg-preview.png') }}">
+</a>
+<div class="arv-brand-name">A R Vastram</div>
+</div>
+
+
+<!-- RIGHT MENU -->
+
+<div class="arv-menu" id="arvMenu">
+
+<a href="/">Home</a>
+<a href="/shop">Shop</a>
+<a href="#about">About</a>
+<a href="#testimonials">Testimonials</a>
+<a href="#contact">Contact</a>
+
+<a href="/wishlist">
+Wishlist 🧡 <span id="wishCount">{{ wish_count or 0 }}</span>
+</a>
+
+<a href="/cart">
+Cart 🛍️ <span id="cartCount">0</span>
+</a>
+
+</div>
+
+
+<!-- HAMBURGER -->
+
+<div class="arv-hamburger" id="arvHamburger">
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+</div>
+
+
+
+<script>
+
+
+const hamburger = document.querySelector(".arv-hamburger");
+const menu = document.querySelector(".arv-menu");
+
+hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("active");
+    menu.classList.toggle("active");
+});
+
+// Sticky scroll effect
+window.addEventListener("scroll", () => {
+    const navbar = document.querySelector(".arv-navbar");
+    navbar.classList.toggle("scrolled", window.scrollY > 10);
+});
+
+</script>
