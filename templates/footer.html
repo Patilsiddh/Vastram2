@@ -1,0 +1,194 @@
+
+<footer class="site-footer">
+
+
+
+
+<!-- CONTACT FORM -->
+<div class="contact-card form-card">
+
+<h3>Send Message</h3>
+
+<form action="/contact" method="post">
+
+<input type="text" name="name" placeholder="Your Name" required>
+
+<input type="email" name="email" placeholder="Your Email" required>
+
+<input type="tel" name="phone" placeholder="Phone Number" required>
+
+<textarea name="message" placeholder="Your Message" required></textarea>
+
+<button type="submit">Send Message</button>
+
+</form>
+
+<!-- SOCIAL MEDIA BUTTONS -->
+<div class="footer-social">
+
+<a href="https://instagram.com" class="social-btn instagram" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
+Instagram
+</a>
+
+<a href="https://facebook.com" class="social-btn facebook" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+Facebook
+</a>
+
+<a href="https://wa.me/919922562197" class="social-btn whatsapp" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+WhatsApp
+</a>
+
+</div>
+</div>
+<p>
+© <span id="year"></span>
+<span class="brand">A R Vastram</span> |
+Developed by <span class="dev">Siddhant Patil</span> |
+All Rights Reserved
+</p>
+
+
+</footer>
+
+
+<style>
+
+/* FOOTER */
+.site-footer{
+background:linear-gradient(135deg,#111,#1f1f1f);
+color:#ddd;
+text-align:center;
+padding:40px 8%;
+margin-top:70px;
+font-size:14px;
+border-top:3px solid #ffb400;
+font-family:'Poppins',sans-serif;
+}
+
+/* BRAND */
+.brand{
+color:#ffb400;
+font-weight:700;
+font-size:16px;
+}
+
+/* DEVELOPER */
+.dev{
+color:#ffb400;
+font-size:13px;
+font-weight:600;
+}
+
+/* SOCIAL MEDIA */
+.footer-social{
+margin-top:20px;
+display:flex;
+justify-content:center;
+gap:18px;
+flex-wrap:wrap;
+}
+
+/* SOCIAL BUTTON */
+.social-btn{
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px 18px;
+border-radius:30px;
+font-size:14px;
+font-weight:600;
+text-decoration:none;
+color:#fff;
+transition:0.3s;
+box-shadow:0 5px 15px rgba(0,0,0,0.25);
+}
+
+.social-btn img{
+width:20px;
+height:20px;
+}
+
+/* INSTAGRAM */
+.instagram{
+background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+}
+
+/* FACEBOOK */
+.facebook{
+background:#1877f2;
+}
+
+/* WHATSAPP */
+.whatsapp{
+background:#25d366;
+}
+
+/* HOVER */
+.social-btn:hover{
+transform:translateY(-3px) scale(1.05);
+}
+
+/* FORM BOX */
+.form-card{
+margin-top:35px;
+background:#1b1b1b;
+padding:25px;
+border-radius:10px;
+max-width:420px;
+margin-left:auto;
+margin-right:auto;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* FORM TITLE */
+.form-card h3{
+margin-bottom:15px;
+color:#ffb400;
+}
+
+/* INPUTS */
+.form-card input,
+.form-card textarea{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border:none;
+border-radius:6px;
+font-size:14px;
+}
+
+/* BUTTON */
+.form-card button{
+width:100%;
+padding:10px;
+border:none;
+border-radius:6px;
+background:#ffb400;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.form-card button:hover{
+background:#ffd24d;
+transform:scale(1.04);
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.footer-social{
+flex-direction:column;
+align-items:center;
+}
+
+.form-card{
+width:90%;
+}
+
+}
+
+</style>

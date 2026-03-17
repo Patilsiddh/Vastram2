@@ -3,271 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ p.name|default('Product') }}</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background:#f4f6f8;
-      margin:0;
-    }
-
-    .navbar {
-      display:flex;
-      justify-content:space-between;
-      padding:15px 40px;
-      background:#2b7cff;
-      color:white;
-    }
-    .navbar a {
-      color:white;
-      text-decoration:none;
-      margin-left:15px;
-    }
-
-    .product-container {
-      max-width:1100px;
-      margin:40px auto;
-      background:white;
-      border-radius:12px;
-      box-shadow:0 6px 20px rgba(0,0,0,.1);
-      padding:40px;
-      display:flex;
-      gap:50px;
-      flex-wrap:wrap;
-    }
-
-    .product-image {
-      flex:1;
-      text-align:center;
-    }
-
-    .product-image img {
-      max-width:100%;
-      max-height:450px;
-      border-radius:12px;
-    }
-
-    .product-details {
-      flex:1;
-    }
-
-    .product-details h1 {
-      margin-top:0;
-      font-size:30px;
-    }
-
-    .price {
-      font-size:26px;
-      color:#8b0000;
-      font-weight:bold;
-      margin:15px 0;
-    }
-
-    .info-line {
-      margin:6px 0;
-      font-size:15px;
-    }
-    .info-line b {
-      display:inline-block;
-      width:120px;
-    }
-
-    .size-box {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:20px 0;
-    }
-
-    .size-btn {
-      border:1px solid #ccc;
-      padding:8px 14px;
-      cursor:pointer;
-      border-radius:6px;
-      text-align:center;
-      min-width:70px;
-    }
-    .size-btn.active {
-      background:#111;
-      color:white;
-    }
-    .size-btn.out {
-      background:#eee;
-      color:#999;
-      cursor:not-allowed;
-    }
-
-    .btn {
-      padding:10px 20px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      font-size:14px;
-    }
-    .btn-cart {
-      background:#8b0000;
-      color:white;
-      margin-right:10px;
-    }
-    .btn-wishlist {
-      background:white;
-      border:2px solid #8b0000;
-      color:#8b0000;
-    }
-
-    .stock-text {
-      font-size:13px;
-    }
-
-    /* Carousel thumbnails */
-    #carousel-thumbs {
-      display:flex;
-      gap:8px;
-      flex-wrap:nowrap;
-      margin-top:10px;
-      justify-content:center;
-      overflow-x:auto;
-    }
-    .thumb-img {
-      border:2px solid #ccc;
-      border-radius:6px;
-      cursor:pointer;
-      width:60px;
-      height:60px;
-      object-fit:cover;
-      transition:border 0.3s;
-    }
-    .thumb-img.active-thumb {
-      border-color:#2b7cff;
-    }
-
-    /* Zoom container */
-    .zoom-container {
-      overflow:hidden;
-      position:relative;
-      cursor:zoom-in;
-    }
-    .zoom-container img {
-      transition: transform 0.4s ease;
-    }
-    .zoom-container:hover img {
-      transform:scale(1.8);
-    }
-
-    /* Custom carousel arrows */
-    .custom-arrow {
-      width:40px;
-      height:40px;
-      background: rgba(0,0,0,0.4);
-      border-radius:50%;
-      top:45%;
-    }
-    .custom-arrow:hover {
-      background: rgba(0,0,0,0.7);
-    }
-    .arrow-left, .arrow-right {
-      display:inline-block;
-      width:12px;
-      height:12px;
-      border-top:3px solid white;
-      border-right:3px solid white;
-      margin:auto;
-    }
-    .arrow-left { transform:rotate(-135deg); }
-    .custom-arrow.carousel-control-next .arrow-right { transform:rotate(45deg); }
-
-    @media(max-width:768px){
-      .product-container { flex-direction:column; }
-    }
-
-    .reviews-section{
-max-width:1100px;
-margin:40px auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 6px 16px rgba(0,0,0,0.08);
-}
-
-.review-form input,
-.review-form textarea,
-.review-form select{
-width:100%;
-padding:10px;
-margin:8px 0;
-border:1px solid #ccc;
-border-radius:6px;
-}
-
-.review-form textarea{
-height:100px;
-resize:none;
-}
-
-.review-form button{
-background:#2b7cff;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:6px;
-cursor:pointer;
-}
-
-.review-card{
-border-top:1px solid #eee;
-padding:15px 0;
-}
-
-.review-header{
-display:flex;
-gap:15px;
-align-items:center;
-font-size:14px;
-}
-
-.review-rating{
-color:#ff9800;
-}
-
-.review-date{
-color:#777;
-font-size:12px;
-}
-
-.review-images{
-display:flex;
-gap:10px;
-margin-top:10px;
-flex-wrap:wrap;
-}
-
-.review-images img{
-width:80px;
-height:80px;
-object-fit:cover;
-border-radius:6px;
-cursor:pointer;
-}
-  </style>
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- NAVBAR -->
-<div class="navbar">
-  <div><b>Royal Ethnic Wear</b></div>
-  <div>
-    <a href="/">Home</a>
-    <a href="/wishlist">Wishlist 🧡</a>
-    <a href="/cart">Cart 🛒
-      {% if session.get('cart_count') %}
-        <span class="badge bg-light text-dark">{{ session.get('cart_count') }}</span>
-      {% endif %}
-    </a>
-  </div>
-</div>
+{% include 'navbar.html' %}
 
 <!-- FLASH MESSAGES -->
 <!-- Flash messages -->
@@ -327,11 +71,19 @@ cursor:pointer;
   </div>
 
   <!-- PRODUCT DETAILS -->
-  <div class="product-details">
+ <div class="product-details">
     <h1>{{ p.name }}</h1>
-    <div class="price">
-      ₹<span id="finalPrice">{{ p.price }}</span>
+
+    <!-- Price Section -->
+    <div class="price-container">
+        <span class="final-price">₹<span id="finalPrice">{{ p.price }}</span></span>
+
+        {% if p.mrp > p.price %}
+            <span class="mrp">₹{{ p.mrp }}</span>
+            <span class="discount">({{ ((p.mrp - p.price) / p.mrp * 100)|round(0) }}% OFF)</span>
+        {% endif %}
     </div>
+
     <span id="basePrice" style="display:none">{{ p.price }}</span>
 
     {% if p.description %}
@@ -375,155 +127,9 @@ Wishlist 🧡
   </div>
 </div>
 <hr>
-<div class="reviews-section">
 
-<h2>Customer Reviews</h2>
-
-<!-- REVIEW FORM -->
-<div class="review-form">
-
-<h4>Write a Review</h4>
-<form action="/add_review/{{ p.id }}" method="POST" enctype="multipart/form-data">
-  <input type="text" name="name" placeholder="Your Name" required>
-
-  <select name="rating" required>
-    <option value="">Select Rating</option>
-    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
-    <option value="4">⭐⭐⭐⭐ (4)</option>
-    <option value="3">⭐⭐⭐ (3)</option>
-    <option value="2">⭐⭐ (2)</option>
-    <option value="1">⭐ (1)</option>
-  </select>
-
-  <textarea name="review" placeholder="Write your review..." required></textarea>
-
-  <label>Upload Images (you can select multiple)</label>
-  <input type="file" name="images" multiple accept="image/*">
-
-  <button type="submit">Submit Review</button>
-</form>
-
-</div>
-
-
-<!-- REVIEWS LIST -->
-
-<div class="reviews-list">
-
-{% if reviews %}
-
-{% for r in reviews %}
-
-<div class="review-card">
-
-<div class="review-header">
-
-<strong>{{ r.name }}</strong>
-
-<span class="review-rating">
-{% for i in range(r.rating) %}⭐{% endfor %}
-</span>
-
-<span class="review-date">{{ r.created_at }}</span>
-
-</div>
-
-<p class="review-text">
-{{ r.review }}
-</p>
-{% if r.images and r.images|length > 0 %}
-<div class="review-images">
-  {% for img in r.images %}
-    {% if img %}
-      <img src="/static/reviews/{{ img }}" alt="review">
-    {% endif %}
-  {% endfor %}
-</div>
-{% endif %}
-
-
-<!-- EDIT DELETE BUTTONS -->
-<div class="review-actions">
-
-<a href="/edit_review/{{ r.id }}" class="edit-btn">
-Edit
-</a>
-
-<a href="/delete_review/{{ r.id }}"
-   onclick="return confirm('Delete this review?')"
-   class="delete-btn">
-Delete
-</a>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-{% else %}
-
-<p>No reviews yet. Be the first to review!</p>
-
-{% endif %}
-
-</div>
-
-<div class="reviews-list" id="reviewsContainer">
-Loading reviews...
-</div>
-
-</div>
-</div>
-
-
-<script>
-
-const productId = "{{ p.id }}";
-
-
-fetch(`/get_reviews/${productId}`)
-.then(r=>r.json())
-.then(data=>{
-  let html="";
-
-  if(data.length==0){
-    html="<p>No reviews yet.</p>";
-  } else {
-    data.forEach(r=>{
-      let stars = "⭐".repeat(r.rating || 0);
-      let imgs = "";
-
-      if(r.images && Array.isArray(r.images) && r.images.length>0){
-        r.images.forEach(img=>{
-          if(img){
-            imgs += `<img src="/static/reviews/${img}" alt="review">`;
-          }
-        });
-      }
-
-      html += `
-        <div class="review-card">
-          <div class="review-header">
-            <strong>${r.name}</strong>
-            <span class="review-rating">${stars}</span>
-            <span class="review-date">${r.created_at}</span>
-          </div>
-          <p>${r.review}</p>
-          ${imgs ? `<div class="review-images">${imgs}</div>` : ""}
-          <div class="review-actions">
-            <a href="/edit_review/${r.id}" class="edit-btn">Edit</a>
-            <a href="/delete_review/${r.id}" class="delete-btn" onclick="return confirm('Delete review?')">Delete</a>
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  document.getElementById("reviewsContainer").innerHTML = html;
-});
-</script>
-
+{% include 'reviews.html' %}
+{% include 'footer.html' %}
 <script>
 function selectSize(el){
     if(el.classList.contains("out")) return;
@@ -612,5 +218,98 @@ function addWishlist(pid){
 
 }
 </script>
+
+
+<style>/* Base Styles (your previous enhanced CSS remains) */
+/* ================== Product Container ================== */
+/* ================== Product Container ================== */
+.product-container{max-width:1100px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.1);padding:40px;display:flex;gap:50px;flex-wrap:wrap;transition:transform .3s ease,box-shadow .3s ease;}
+.product-container:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,.15);}
+
+/* ================== Product Image ================== */
+.product-image{flex:1;text-align:center;position:relative;overflow:hidden;border-radius:12px;}
+.product-image img{max-width:100%;max-height:450px;border-radius:12px;transition:transform .5s ease;}
+.product-image:hover img{transform:scale(1.8);cursor:zoom-in;}
+
+/* ================== Product Details ================== */
+.product-details{flex:1;display:flex;flex-direction:column;gap:12px;padding:20px;border:1px solid #8b5e34;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);background:#fff;transition:all .4s ease;animation:fadeIn .6s ease;}
+.product-details:hover{border-color:#2b7cff;box-shadow:0 12px 24px rgba(0,0,0,.12);transform:translateY(-3px);}
+.product-details h1{margin-top:0;font-size:30px;font-weight:600;color:#111;transition:color .4s ease,text-shadow .4s ease;}
+.product-details h1:hover{color:#2b7cff;text-shadow:1px 1px 2px rgba(43,124,255,.5);}
+.price{font-size:26px;color:#8b0000;font-weight:bold;margin:15px 0;transition:color .4s ease,transform .3s ease,text-shadow .4s ease;}
+.price:hover{color:#ff0000;transform:scale(1.08);text-shadow:1px 1px 3px rgba(139,0,0,.5);}
+.info-line{margin:6px 0;font-size:15px;}
+.info-line b{display:inline-block;width:120px;border-bottom:1px solid #8b5e34;padding-bottom:2px;}
+
+
+.price-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 26px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.final-price {
+  color: #8b0000;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.final-price:hover {
+  transform: scale(1.05);
+  color: #ff0000;
+  text-shadow: 1px 1px 3px rgba(139,0,0,0.5);
+}
+
+.mrp {
+  color: #888;
+  text-decoration: line-through;
+  font-size: 20px;
+}
+
+.discount {
+  color: #2b7cff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+/* ================== Size Selection ================== */
+.size-box{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;}
+.size-btn{border:1px solid #8b5e34;padding:7px 12px;min-width:60px;text-align:center;border-radius:6px;background:#f9f9f9;color:#111;font-weight:500;cursor:pointer;transition:all .3s ease;}
+.size-btn:hover{background:#8b5e34;color:white;transform:translateY(-2px) scale(1.05);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.size-btn.active{background:#111;color:white;border-color:#111;}
+.size-btn.out{background:#eee;color:#999;cursor:not-allowed;opacity:.7;}
+
+/* ================== Action Buttons ================== */
+.btn{font-size:13px;padding:9px 18px;text-align:center;border-radius:6px;font-weight:500;cursor:pointer;transition:all .3s ease;}
+.btn-cart{background:#8b0000;color:white;border:none;margin-right:10px;}
+.btn-cart:hover{background:#a00000;transform:translateY(-2px) scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.btn-wishlist{background:#fff;color:#8b5e34;border:2px solid #8b5e34;}
+.btn-wishlist:hover{background:#8b0000;color:white;transform:translateY(-2px) scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.stock-text{font-size:13px;opacity:0;transition:opacity .5s ease;}
+
+/* ================== Carousel Thumbnails ================== */
+#carousel-thumbs{display:flex;gap:8px;flex-wrap:nowrap;margin-top:10px;justify-content:center;overflow-x:auto;}
+.thumb-img{border:2px solid #ccc;border-radius:6px;cursor:pointer;width:60px;height:60px;object-fit:cover;transition:border .3s ease,transform .3s ease;}
+.thumb-img:hover{transform:scale(1.1);border-color:#2b7cff;}
+.thumb-img.active-thumb{border-color:#2b7cff;}
+
+/* ================== Carousel Arrows ================== */
+.custom-arrow{width:40px;height:40px;background:rgba(0,0,0,.4);border-radius:50%;top:45%;position:absolute;display:flex;align-items:center;justify-content:center;transition:background .3s ease;}
+.custom-arrow:hover{background:rgba(0,0,0,.7);}
+.arrow-left,.arrow-right{display:inline-block;width:12px;height:12px;border-top:3px solid #fff;border-right:3px solid #fff;margin:auto;}
+.arrow-left{transform:rotate(-135deg);}
+.custom-arrow.carousel-control-next .arrow-right{transform:rotate(45deg);}
+
+/* ================== Animations ================== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ================== Responsive ================== */
+@media(max-width:1024px){.product-container{flex-direction:column;padding:30px;}.product-image img{max-height:400px;}.product-details h1{font-size:26px;}.price{font-size:24px;}.size-btn{padding:7px 12px;min-width:60px;}.btn{font-size:13px;padding:9px 18px;}.thumb-img{width:50px;height:50px;}}
+@media(max-width:768px){.product-container{flex-direction:column;padding:20px;gap:20px;}.product-image img{max-height:300px;}.product-details h1{font-size:22px;}.price{font-size:22px;}.info-line{font-size:14px;}.size-btn{padding:6px 10px;min-width:50px;font-size:13px;}.btn{font-size:13px;padding:8px 16px;width:48%;margin-bottom:8px;}.thumb-img{width:45px;height:45px;}}
+@media(max-width:480px){.product-details h1{font-size:20px;}.price{font-size:20px;}.size-btn{padding:5px 8px;min-width:45px;font-size:12px;}.btn{font-size:12px;padding:7px 12px;width:100%;}.thumb-img{width:40px;height:40px;}}
+</style>
 </body>
 </html>

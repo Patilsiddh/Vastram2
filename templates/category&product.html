@@ -1,0 +1,201 @@
+<!-- ========== CATEGORY FILTER ========== -->
+<div class="categories">
+  <strong>Filter by Category:</strong>
+  {% for cat in categories %}
+    <label>
+      <input type="checkbox" class="cat-filter" value="{{ cat[0] }}"> {{ cat[1] }}
+    </label>
+  {% endfor %}
+  <button id="resetFilter">Reset</button>
+</div>
+
+<!-- ========== PRODUCTS GRID ========== -->
+<div class="products">
+  {% for p in products %}
+  <div class="card" data-category="{{ p.category }}" data-baseprice="{{ p.discount_price or p.price }}" data-id="{{ p.id }}">
+    <img src="{{ url_for('static', filename='uploads/' + (p.image or 'no-image.png')) }}" alt="{{ p.name }}">
+    <h3>{{ p.name }}</h3>
+    <p class="short-desc">{{ (p.description or '')[:80] }}</p>
+    <p class="price-box">
+      {% if p.discount_price and p.mrp > p.discount_price %}
+        <span class="mrp">₹{{ p.mrp }}</span>
+        <span class="discount">₹{{ p.discount_price }}</span>
+      {% else %}
+        <span class="discount">₹{{ p.price }}</span>
+      {% endif %}
+    </p>
+
+    {% if p.sizes %}
+    <div class="size-box">
+      {% for s in p.sizes %}
+      <div class="size-btn" data-size="{{ s.size }}" data-extra="{{ s.extra_price or 0 }}" onclick="selectSize(this)">
+  {{ s.size }}
+</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="actions">
+      <a href="/product/{{ p.id }}" class="view-btn">View</a>
+      <form action="/add_to_cart/{{ p.id }}" method="post" class="add-cart-form">
+<input type="hidden" name="size" class="selected-size">
+<button type="submit" class="btn btn-cart">Add to Cart</button>
+</form>
+      <button class="btn buy-now" data-id="{{ p.id }}">Buy Now</button>
+      <button class="btn add-wish" data-id="{{ p.id }}">Wishlist</button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<style>
+.filter-container {
+  background:#fff; padding:25px 40px; margin:25px 50px;
+  border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  display:flex; flex-wrap:wrap; gap:20px; align-items:center;
+}
+.filter-container strong { color:#498ff1; font-size:18px; margin-right:15px; }
+.filter-container label { background:#f4f6fb; padding:8px 15px; border-radius:25px; cursor:pointer; font-size:14px; transition:0.3s; }
+.filter-container label:hover { background:#498ff1; color:#fff; }
+#resetFilter { background:#ff5252; color:#fff; border:none; padding:8px 18px; border-radius:25px; cursor:pointer; font-size:14px; transition:0.3s; }
+#resetFilter:hover { background:#e04343; }
+
+.price-slider { display:flex; align-items:center; gap:10px; font-size:14px; }
+.price-slider input[type="range"]{ width:150px; }
+
+/* ===== PRODUCTS GRID ===== */
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 products per row on desktop */
+  gap: 25px; /* spacing between products */
+  padding: 20px 40px;
+  overflow-x: visible; /* remove horizontal scroll */
+}
+
+/* Responsive for tablets */
+@media(max-width:1024px){
+  .products { 
+    grid-template-columns: repeat(2, 1fr); /* 2 per row on tablets */
+  }
+}
+
+/* Responsive for mobile */
+@media(max-width:768px){
+  .products { 
+    grid-template-columns: 1fr; /* 1 per row on mobile */
+  }
+}
+
+/* ===== SCROLLBAR (optional if grid overflows) ===== */
+.products::-webkit-scrollbar {
+  height: 8px;
+}
+.products::-webkit-scrollbar-thumb {
+  background: #498ff1;
+  border-radius: 4px;
+}
+.products::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+/* ===== PRODUCT CARD ===== */
+.card { 
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover { 
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.card img { 
+  width: 100%;
+  height: 220px; /* make image taller */
+  object-fit: cover;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.card img:hover { 
+  transform: scale(1.05);
+}
+
+.card h3 { 
+  font-size: 16px; 
+  margin: 10px 0 5px; 
+  color: #333;
+}
+
+.card .short-desc { 
+  font-size: 13px; 
+  color: #666; 
+  margin-bottom: 5px; 
+}
+
+.price-box { 
+  margin: 8px 0; 
+}
+
+.mrp { 
+  color: rgb(240,186,87); 
+  text-decoration: line-through; 
+  font-size: 14px; 
+  margin-right: 6px; 
+}
+
+.discount { 
+  color: #498ff1; 
+  font-weight: bold; 
+  font-size: 17px; 
+}
+
+/* ===== BUTTONS ===== */
+.actions { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  margin-top: 8px; 
+}
+
+.view-btn, .btn { 
+  flex: 1; 
+  padding: 8px 12px; 
+  border-radius: 6px; 
+  border: none; 
+  background: #498ff1; 
+  color: #fff; 
+  font-size: 14px; 
+  transition: 0.3s; 
+}
+
+.view-btn:hover, .btn:hover { background: #2b5fcf; }
+
+.add-wish { background: #ff4081; }
+.add-wish:hover { background: #e73372; }
+
+/* ===== SIZE BOX ===== */
+.size-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0; }
+.size-btn { border: 1px solid #498ff1; padding: 4px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; background: #fff; min-width: 40px; text-align: center; transition: 0.2s; }
+.size-btn.active { background: #498ff1; color: #fff; }
+.size-btn:hover { background: #498ff1; color: #fff; }
+</style>
+<script>
+// Make only the product image clickable
+document.querySelectorAll('.products .card img').forEach(img => {
+  img.style.cursor = 'pointer'; // show pointer on hover
+  img.addEventListener('click', function() {
+    const productLink = img.closest('.card').querySelector('.view-btn').getAttribute('href');
+    if (productLink) {
+      window.location.href = productLink;
+    }
+  });
+});
+</script>

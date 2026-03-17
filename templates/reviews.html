@@ -1,0 +1,216 @@
+<div class="reviews-section">
+
+<h2>Customer Reviews</h2>
+
+<!-- REVIEW FORM -->
+<div class="review-form">
+
+<h4>Write a Review</h4>
+<form action="/add_review/{{ p.id }}" method="POST" enctype="multipart/form-data">
+  <input type="text" name="name" placeholder="Your Name" required>
+
+  <select name="rating" required>
+    <option value="">Select Rating</option>
+    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+    <option value="4">⭐⭐⭐⭐ (4)</option>
+    <option value="3">⭐⭐⭐ (3)</option>
+    <option value="2">⭐⭐ (2)</option>
+    <option value="1">⭐ (1)</option>
+  </select>
+
+  <textarea name="review" placeholder="Write your review..." required></textarea>
+
+  <label>Upload Images (you can select multiple)</label>
+  <input type="file" name="images" multiple accept="image/*">
+
+  <button type="submit">Submit Review</button>
+</form>
+
+</div>
+
+
+<!-- REVIEWS LIST -->
+
+<div class="reviews-list">
+
+{% if reviews %}
+
+{% for r in reviews %}
+
+<div class="review-card">
+
+<div class="review-header">
+
+<strong>{{ r.name }}</strong>
+
+<span class="review-rating">
+{% for i in range(r.rating) %}⭐{% endfor %}
+</span>
+
+<span class="review-date">{{ r.created_at }}</span>
+
+</div>
+
+<p class="review-text">
+{{ r.review }}
+</p>
+{% if r.images and r.images|length > 0 %}
+<div class="review-images">
+  {% for img in r.images %}
+    {% if img %}
+      <img src="/static/reviews/{{ img }}" alt="review">
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- EDIT DELETE BUTTONS -->
+<div class="review-actions">
+
+<a href="/edit_review/{{ r.id }}" class="edit-btn">
+Edit
+</a>
+
+<a href="/delete_review/{{ r.id }}"
+   onclick="return confirm('Delete this review?')"
+   class="delete-btn">
+Delete
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p>No reviews yet. Be the first to review!</p>
+
+{% endif %}
+
+</div>
+
+<div class="reviews-list" id="reviewsContainer">
+Loading reviews...
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+const productId = "{{ p.id }}";
+
+
+fetch(`/get_reviews/${productId}`)
+.then(r=>r.json())
+.then(data=>{
+  let html="";
+
+  if(data.length==0){
+    html="<p>No reviews yet.</p>";
+  } else {
+    data.forEach(r=>{
+      let stars = "⭐".repeat(r.rating || 0);
+      let imgs = "";
+
+      if(r.images && Array.isArray(r.images) && r.images.length>0){
+        r.images.forEach(img=>{
+          if(img){
+            imgs += `<img src="/static/reviews/${img}" alt="review">`;
+          }
+        });
+      }
+
+      html += `
+        <div class="review-card">
+          <div class="review-header">
+            <strong>${r.name}</strong>
+            <span class="review-rating">${stars}</span>
+            <span class="review-date">${r.created_at}</span>
+          </div>
+          <p>${r.review}</p>
+          ${imgs ? `<div class="review-images">${imgs}</div>` : ""}
+          <div class="review-actions">
+            <a href="/edit_review/${r.id}" class="edit-btn">Edit</a>
+            <a href="/delete_review/${r.id}" class="delete-btn" onclick="return confirm('Delete review?')">Delete</a>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("reviewsContainer").innerHTML = html;
+});
+</script>
+<style>    .reviews-section{
+max-width:1100px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 6px 16px rgba(0,0,0,0.08);
+}
+
+.review-form input,
+.review-form textarea,
+.review-form select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.review-form textarea{
+height:100px;
+resize:none;
+}
+
+.review-form button{
+background:#2b7cff;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.review-card{
+border-top:1px solid #eee;
+padding:15px 0;
+}
+
+.review-header{
+display:flex;
+gap:15px;
+align-items:center;
+font-size:14px;
+}
+
+.review-rating{
+color:#ff9800;
+}
+
+.review-date{
+color:#777;
+font-size:12px;
+}
+
+.review-images{
+display:flex;
+gap:10px;
+margin-top:10px;
+flex-wrap:wrap;
+}
+
+.review-images img{
+width:80px;
+height:80px;
+object-fit:cover;
+border-radius:6px;
+cursor:pointer;
+}</style>

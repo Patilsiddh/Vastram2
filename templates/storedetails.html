@@ -1,0 +1,271 @@
+<!-- STORE DETAILS -->
+<!-- ========== CONTACT ========== -->
+<section class="contact-section" id="contact">
+
+<h2 class="contact-title">Visit Our Store</h2>
+
+<div class="contact-container">
+
+<!-- MAP -->
+<div class="contact-card map-card">
+
+<iframe
+src="https://www.google.com/maps?q=A%20R%20Vastram%20Nashik&output=embed"
+loading="lazy">
+</iframe>
+
+</div>
+
+
+<div class="contact-card info-card">
+
+<div class="brand-box">
+<img src="/static/uploads/Logo-removebg-preview.png">
+<h3 class="brand">A R Vastram</h3>
+<p class="tagline">Premium Ethnic Wear Collection</p>
+</div>
+
+<div class="info-item">
+📍 <strong>Address:</strong><br>
+Shop No. 28,29, Nysa Business Center,<br>
+ Ghadge Nagar,<br>
+Makhmalabad, Nashik,<br>
+Maharashtra 422003, India
+</div>
+
+<div class="info-item">
+👤 <strong>Owner:</strong> Rahul (Daya) Chavan
+</div>
+
+<div class="info-item">
+📞 <strong>Contact:</strong> 
+<a href="tel:+919922562197">+91 99225 62197</a>
+</div>
+
+<div class="info-item">
+📧 <strong>Email:</strong> 
+<a href="mailto:ARVastram@gmail.com">ARVastram@gmail.com</a>
+</div>
+
+
+
+</div>
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+<!-- CONTACT FORM -->
+
+
+</div>
+
+<style>
+
+/* SECTION */
+/* CONTACT SECTION */
+.contact-section{
+padding:90px 8%;
+background:linear-gradient(135deg,#f7f7f7,#eeeeee);
+font-family:'Poppins',sans-serif;
+}
+
+/* TITLE */
+.contact-title{
+text-align:center;
+font-size:36px;
+font-weight:700;
+margin-bottom:50px;
+color:#222;
+letter-spacing:1px;
+animation:fadeDown 1s ease;
+}
+
+/* MAIN CONTAINER (ONE BACKGROUND) */
+.contact-container{
+display:flex;
+gap:60px;
+align-items:center;
+justify-content:space-between;
+background:#ffffff;
+padding:50px;
+border-radius:16px;
+box-shadow:0 15px 40px rgba(0,0,0,0.12);
+animation:fadeUp 1.2s ease;
+}
+
+/* MAP SIDE */
+/* MAP CARD */
+.map-card{
+flex:1;
+display:flex;
+align-items:stretch;
+}
+
+/* BIG MAP */
+.map-card iframe{
+width:150%;
+height:10%;
+min-height:480px;   /* increase map height */
+border:none;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+.map-card iframe:hover{
+transform:scale(1.02);
+}
+
+/* INFO SIDE */
+/* INFO CARD BOX */
+.info-card{
+background:#ffffff;
+padding:35px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.12);
+transition:0.3s;
+position:relative;
+overflow:hidden;
+}
+
+/* HOVER EFFECT */
+.info-card:hover{
+transform:translateY(-6px);
+box-shadow:0 18px 45px rgba(0,0,0,0.18);
+}
+
+/* BRAND BOX (LOGO + NAME) */
+.brand-box{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+border-bottom:2px solid #f0f0f0;
+padding-bottom:15px;
+}
+
+/* LOGO */
+.brand-box img{
+width:70px;
+height:auto;
+object-fit:contain;
+}
+
+/* BRAND NAME */
+.brand{
+font-size:28px;
+font-weight:700;
+color:#7a0019;
+margin:0;
+}
+
+/* TAGLINE */
+.tagline{
+font-size:14px;
+color:#777;
+margin-top:3px;
+}
+
+/* INFO ITEMS */
+.info-item{
+margin:14px 0;
+font-size:16px;
+line-height:1.7;
+color:#333;
+padding:8px 12px;
+border-radius:6px;
+transition:0.3s;
+}
+
+/* ICON EFFECT */
+.info-item:hover{
+background:#f8f5f2;
+transform:translateX(6px);
+}
+
+/* LINKS */
+.info-item a{
+color:#7a0019;
+text-decoration:none;
+font-weight:500;
+}
+
+.info-item a:hover{
+color:#d4a017;
+}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+
+.info-card{
+padding:25px;
+}
+
+.brand{
+font-size:24px;
+}
+
+.info-item{
+font-size:15px;
+}
+
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes fadeDown{
+from{
+opacity:0;
+transform:translateY(-40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes slideRight{
+from{
+opacity:0;
+transform:translateX(50px);
+}
+to{
+opacity:1;
+transform:translateX(0);
+}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+
+.contact-container{
+flex-direction:column;
+padding:35px;
+}
+
+.map-card iframe{
+height:300px;
+}
+
+.info-card{
+padding-left:0;
+text-align:center;
+}
+
+}
+
+</style>
