@@ -1,104 +1,78 @@
-<!-- ========== CATEGORY FILTER ========== -->
-<div class="categories">
-  <strong>Filter by Category:</strong>
-  {% for cat in categories %}
-    <label>
-      <input type="checkbox" class="cat-filter" value="{{ cat[0] }}"> {{ cat[1] }}
-    </label>
-  {% endfor %}
-  <button id="resetFilter">Reset</button>
-</div>
-
-<!-- ========== PRODUCTS GRID ========== -->
-<div class="products">
-  {% for p in products %}
-  <div class="card" data-category="{{ p.category }}" data-baseprice="{{ p.discount_price or p.price }}" data-id="{{ p.id }}">
-    <img src="{{ url_for('static', filename='uploads/' + (p.image or 'no-image.png')) }}" alt="{{ p.name }}">
-    <h3>{{ p.name }}</h3>
-    <p class="short-desc">{{ (p.description or '')[:80] }}</p>
-    <p class="price-box">
-      {% if p.discount_price and p.mrp > p.discount_price %}
-        <span class="mrp">₹{{ p.mrp }}</span>
-        <span class="discount">₹{{ p.discount_price }}</span>
-      {% else %}
-        <span class="discount">₹{{ p.price }}</span>
-      {% endif %}
-    </p>
-
-    {% if p.sizes %}
-    <div class="size-box">
-      {% for s in p.sizes %}
-      <div class="size-btn" data-size="{{ s.size }}" data-extra="{{ s.extra_price or 0 }}" onclick="selectSize(this)">
-  {{ s.size }}
-</div>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="actions">
-      <a href="/product/{{ p.id }}" class="view-btn">View</a>
-      <form action="/add_to_cart/{{ p.id }}" method="post" class="add-cart-form">
-<input type="hidden" name="size" class="selected-size">
-<button type="submit" class="btn btn-cart">Add to Cart</button>
-</form>
-      <button class="btn buy-now" data-id="{{ p.id }}">Buy Now</button>
-      <button class="btn add-wish" data-id="{{ p.id }}">Wishlist</button>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products Page</title>
 <style>
-.filter-container {
-  background:#fff; padding:25px 40px; margin:25px 50px;
-  border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,0.08);
-  display:flex; flex-wrap:wrap; gap:20px; align-items:center;
+/* ==================== CAROUSEL ==================== */
+.men-carousel {
+  width: 100%;
+  max-width: 800px;
+  height: 420px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin: 30px auto;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-.filter-container strong { color:#498ff1; font-size:18px; margin-right:15px; }
-.filter-container label { background:#f4f6fb; padding:8px 15px; border-radius:25px; cursor:pointer; font-size:14px; transition:0.3s; }
-.filter-container label:hover { background:#498ff1; color:#fff; }
-#resetFilter { background:#ff5252; color:#fff; border:none; padding:8px 18px; border-radius:25px; cursor:pointer; font-size:14px; transition:0.3s; }
+.slides {
+  display: flex;
+  transition: transform 0.7s ease;
+}
+.slides img {
+  flex: 0 0 100%;
+  height: 420px;
+  object-fit: cover;
+}
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 28px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+}
+.arrow:hover { background: rgba(0,0,0,0.8); }
+.left { left: 15px; }
+.right { right: 15px; }
+
+/* ==================== FILTER ==================== */
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  padding: 15px 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.categories strong { color:#498ff1; margin-right:10px; font-size:16px; }
+.categories label { background:#f4f6fb; padding:6px 12px; border-radius:20px; cursor:pointer; transition:0.3s; }
+.categories label:hover { background:#498ff1; color:#fff; }
+#priceRange { margin: 0 10px; }
+#priceValue { font-weight:bold; }
+#resetFilter { background:#ff5252; color:#fff; border:none; padding:6px 16px; border-radius:20px; cursor:pointer; transition:0.3s; }
 #resetFilter:hover { background:#e04343; }
 
-.price-slider { display:flex; align-items:center; gap:10px; font-size:14px; }
-.price-slider input[type="range"]{ width:150px; }
-
-/* ===== PRODUCTS GRID ===== */
+/* ==================== PRODUCTS GRID ==================== */
 .products {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 products per row on desktop */
-  gap: 25px; /* spacing between products */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
   padding: 20px 40px;
-  overflow-x: visible; /* remove horizontal scroll */
 }
+@media(max-width:1024px){ .products { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width:768px){ .products { grid-template-columns: 1fr; } }
 
-/* Responsive for tablets */
-@media(max-width:1024px){
-  .products { 
-    grid-template-columns: repeat(2, 1fr); /* 2 per row on tablets */
-  }
-}
-
-/* Responsive for mobile */
-@media(max-width:768px){
-  .products { 
-    grid-template-columns: 1fr; /* 1 per row on mobile */
-  }
-}
-
-/* ===== SCROLLBAR (optional if grid overflows) ===== */
-.products::-webkit-scrollbar {
-  height: 8px;
-}
-.products::-webkit-scrollbar-thumb {
-  background: #498ff1;
-  border-radius: 4px;
-}
-.products::-webkit-scrollbar-track {
-  background: #f0f0f0;
-}
-
-/* ===== PRODUCT CARD ===== */
 .card { 
   background: #fff;
   border-radius: 12px;
@@ -109,93 +83,124 @@
   flex-direction: column;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-
-.card:hover { 
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-}
-
-.card img { 
-  width: 100%;
-  height: 220px; /* make image taller */
-  object-fit: cover;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.card img:hover { 
-  transform: scale(1.05);
-}
-
-.card h3 { 
-  font-size: 16px; 
-  margin: 10px 0 5px; 
-  color: #333;
-}
-
-.card .short-desc { 
-  font-size: 13px; 
-  color: #666; 
-  margin-bottom: 5px; 
-}
-
-.price-box { 
-  margin: 8px 0; 
-}
-
-.mrp { 
-  color: rgb(240,186,87); 
-  text-decoration: line-through; 
-  font-size: 14px; 
-  margin-right: 6px; 
-}
-
-.discount { 
-  color: #498ff1; 
-  font-weight: bold; 
-  font-size: 17px; 
-}
-
-/* ===== BUTTONS ===== */
-.actions { 
-  display: flex; 
-  gap: 8px; 
-  flex-wrap: wrap; 
-  justify-content: center; 
-  margin-top: 8px; 
-}
-
-.view-btn, .btn { 
-  flex: 1; 
-  padding: 8px 12px; 
-  border-radius: 6px; 
-  border: none; 
-  background: #498ff1; 
-  color: #fff; 
-  font-size: 14px; 
-  transition: 0.3s; 
-}
-
+.card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+.card img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; transition: 0.3s; }
+.card img:hover { transform: scale(1.05); }
+.card h3 { font-size: 16px; margin: 10px 0 5px; color: #333; }
+.card .short-desc { font-size: 13px; color: #666; margin-bottom: 5px; }
+.price-box { margin: 8px 0; }
+.mrp { color: rgb(240,186,87); text-decoration: line-through; font-size: 14px; margin-right: 6px; }
+.discount { color: #498ff1; font-weight: bold; font-size: 17px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.view-btn, .btn { flex: 1; padding: 8px 12px; border-radius: 6px; border: none; background: #498ff1; color: #fff; font-size: 14px; transition: 0.3s; }
 .view-btn:hover, .btn:hover { background: #2b5fcf; }
-
 .add-wish { background: #ff4081; }
 .add-wish:hover { background: #e73372; }
-
-/* ===== SIZE BOX ===== */
 .size-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0; }
 .size-btn { border: 1px solid #498ff1; padding: 4px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; background: #fff; min-width: 40px; text-align: center; transition: 0.2s; }
 .size-btn.active { background: #498ff1; color: #fff; }
 .size-btn:hover { background: #498ff1; color: #fff; }
 </style>
+</head>
+<body>
+
+<!-- ========== CAROUSEL ========== -->
+<div class="men-carousel">
+  <button class="arrow left">&#10094;</button>
+  <button class="arrow right">&#10095;</button>
+  <div class="slides" id="slides">
+    <img src="static/uploads/Carosal2.jpg" alt="Slide 1">
+    <img src="static/uploads/Carosal5.jpg" alt="Slide 2">
+    <img src="static/uploads/Jodhpuri.jpg" alt="Slide 3">
+    <img src="static/uploads/Ladies_Blazer.jpg" alt="Slide 4">
+  </div>
+</div>
+
+<!-- ========== CATEGORY + PRICE FILTER ========== -->
+<div class="categories">
+  <strong>Filter by Category:</strong>
+  <!-- Example categories -->
+  <label><input type="checkbox" class="cat-filter" value="Jodhpuri"> Jodhpuri</label>
+  <label><input type="checkbox" class="cat-filter" value="Blazer"> Blazer</label>
+  <strong>Price:</strong>
+  <input type="range" id="priceRange" min="0" max="10000" step="10">
+  <span id="priceValue">₹0 - ₹10000</span>
+  <button id="resetFilter">Reset</button>
+</div>
+
+<!-- ========== PRODUCTS GRID ========== -->
+<div class="products">
+  <!-- Example products -->
+  <div class="card" data-category="Jodhpuri" data-price="5000">
+    <img src="static/uploads/Jodhpuri.jpg" alt="Jodhpuri">
+    <h3>Classic Jodhpuri</h3>
+    <p class="short-desc">Elegant traditional Jodhpuri suit for men.</p>
+    <p class="price-box"><span class="discount">₹5000</span></p>
+    <div class="actions">
+      <a href="#" class="view-btn">View</a>
+      <button class="btn add-wish">Wishlist</button>
+    </div>
+  </div>
+
+  <div class="card" data-category="Blazer" data-price="3500">
+    <img src="static/uploads/Ladies_Blazer.jpg" alt="Blazer">
+    <h3>Ladies Blazer</h3>
+    <p class="short-desc">Stylish blazer for office and casual events.</p>
+    <p class="price-box"><span class="discount">₹3500</span></p>
+    <div class="actions">
+      <a href="#" class="view-btn">View</a>
+      <button class="btn add-wish">Wishlist</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// Make only the product image clickable
-document.querySelectorAll('.products .card img').forEach(img => {
-  img.style.cursor = 'pointer'; // show pointer on hover
-  img.addEventListener('click', function() {
-    const productLink = img.closest('.card').querySelector('.view-btn').getAttribute('href');
-    if (productLink) {
-      window.location.href = productLink;
-    }
+// ==================== CAROUSEL JS ====================
+const slides = document.getElementById('slides');
+const images = slides.querySelectorAll('img');
+let slideIndex = 0;
+function showSlide(i){ slides.style.transform = `translateX(-${i*100}%)`; }
+document.querySelector('.left').addEventListener('click',()=>{ slideIndex=(slideIndex-1+images.length)%images.length; showSlide(slideIndex); });
+document.querySelector('.right').addEventListener('click',()=>{ slideIndex=(slideIndex+1)%images.length; showSlide(slideIndex); });
+setInterval(()=>{ slideIndex=(slideIndex+1)%images.length; showSlide(slideIndex); },5000);
+
+// ==================== FILTER JS ====================
+const categoryCheckboxes = document.querySelectorAll('.cat-filter');
+const priceRange = document.getElementById('priceRange');
+const priceValue = document.getElementById('priceValue');
+const resetBtn = document.getElementById('resetFilter');
+const productCards = document.querySelectorAll('.products .card');
+
+// Set price max dynamically
+let maxPrice = 0;
+productCards.forEach(card => { const p=parseFloat(card.dataset.price); if(p>maxPrice) maxPrice=p; });
+priceRange.max = maxPrice; priceRange.value = maxPrice;
+priceValue.textContent=`₹0 - ₹${maxPrice}`;
+
+function filterProducts(){
+  const selectedCats = Array.from(categoryCheckboxes).filter(cb=>cb.checked).map(cb=>cb.value);
+  const maxP = parseFloat(priceRange.value);
+  productCards.forEach(card=>{
+    const cat = card.dataset.category;
+    const price = parseFloat(card.dataset.price);
+    const catMatch = selectedCats.length===0 || selectedCats.includes(cat);
+    const priceMatch = price <= maxP;
+    card.style.display = (catMatch && priceMatch)? 'flex':'none';
+  });
+}
+
+categoryCheckboxes.forEach(cb=>cb.addEventListener('change',filterProducts));
+priceRange.addEventListener('input',()=>{ priceValue.textContent=`₹0 - ₹${priceRange.value}`; filterProducts(); });
+resetBtn.addEventListener('click',()=>{ categoryCheckboxes.forEach(cb=>cb.checked=false); priceRange.value=maxPrice; priceValue.textContent=`₹0 - ₹${maxPrice}`; filterProducts(); });
+
+// ==================== IMAGE CLICK JS ====================
+document.querySelectorAll('.products .card img').forEach(img=>{
+  img.style.cursor='pointer';
+  img.addEventListener('click',function(){
+    const link = img.closest('.card').querySelector('.view-btn').getAttribute('href');
+    if(link) window.location.href = link;
   });
 });
 </script>
+</body>
+</html>
