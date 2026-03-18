@@ -1,0 +1,356 @@
+<!-- ========== CATEGORY FILTER ========== -->
+<div class="categories">
+  <strong>Filter by Category:</strong>
+  <!-- Example categories -->
+  <label><input type="checkbox" class="cat-filter" value="Jodhpuri"> Jodhpuri</label>
+  <label><input type="checkbox" class="cat-filter" value="Blazer"> Blazer</label>
+  <strong>Price:</strong>
+  <input type="range" id="priceRange" min="0" max="10000" step="10">
+  <span id="priceValue">₹0 - ₹10000</span>
+  <button id="resetFilter">Reset</button>
+</div>
+
+<!-- ========== PRODUCTS GRID ========== -->
+<div class="products">
+  {% for p in products %}
+  <div class="card" data-category="{{ p.category }}" data-baseprice="{{ p.discount_price or p.price }}" data-id="{{ p.id }}">
+    <a href="/product/{{ p.id }}">
+  <img src="{{ url_for('static', filename='uploads/' + (p.image or 'no-image.png')) }}" alt="{{ p.name }}">
+</a>
+    <h3>{{ p.name }}</h3>
+    <p class="short-desc">{{ (p.description or '')[:80] }}</p>
+    <p class="price-box">
+      {% if p.discount_price and p.mrp > p.discount_price %}
+        <span class="mrp">₹{{ p.mrp }}</span>
+        <span class="discount">₹{{ p.discount_price }}</span>
+      {% else %}
+        <span class="discount">₹{{ p.price }}</span>
+      {% endif %}
+    </p>
+
+    {% if p.sizes %}
+    <div class="size-box">
+      {% for s in p.sizes %}
+      <div class="size-btn" data-size="{{ s.size }}" data-extra="{{ s.extra_price or 0 }}" onclick="selectSize(this)">
+  {{ s.size }}
+</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="actions">
+      <a href="/product/{{ p.id }}" class="view-btn">View</a>
+      <form action="/add_to_cart/{{ p.id }}" method="post" class="add-cart-form">
+<input type="hidden" name="size" class="selected-size">
+<button type="submit" class="btn btn-cart">Add to Cart</button>
+</form>
+      <button class="btn buy-now" data-id="{{ p.id }}">Buy Now</button>
+      <button class="btn add-wish" data-id="{{ p.id }}">Wishlist</button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+<style>/* ==================== FILTER ==================== */
+/* ==================== FILTER WITH WRAP AND PROPER GAP ==================== */
+.categories {
+  display: flex;
+  flex-wrap: wrap;          /* allow labels to wrap to next line */
+  align-items: center;
+  gap: 15px;                /* equal spacing between elements */
+  padding: 10px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin: 20px auto;
+  max-width: 100%;
+  
+  overflow-x: auto;         /* horizontal scroll for small screens */
+  scrollbar-width: thin;    /* Firefox */
+  scrollbar-color: #498ff1 #f0f0f0;
+}
+
+/* Webkit scrollbar for Chrome/Safari/Edge */
+.categories::-webkit-scrollbar {
+  height: 6px;
+}
+
+.categories::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.categories::-webkit-scrollbar-thumb {
+  background: #498ff1;
+  border-radius: 3px;
+}
+
+/* Strong labels and price info */
+.categories strong, 
+#priceValue {
+  flex-shrink: 0;           /* don't shrink */
+  white-space: nowrap;      /* stay in one line */
+  font-size: 14px;
+}
+
+/* Category labels */
+.categories label {
+  background:#f4f6fb;
+  padding:6px 12px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;                /* space between checkbox and text */
+  white-space: nowrap;
+}
+.categories label:hover { 
+  background:#498ff1; 
+  color:#fff; 
+}
+
+/* Price Range */
+#priceRange {
+  width: 150px;             /* consistent width */
+  flex-shrink: 0;
+}
+
+/* Price Value */
+#priceValue {
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* Reset Button */
+#resetFilter {
+  background:#ff5252;
+  color:#fff;
+  border:none;
+  padding:5px 12px;
+  border-radius:18px;
+  cursor:pointer;
+  transition:0.3s;
+  flex-shrink: 0;
+}
+#resetFilter:hover { background:#e04343; }
+
+/* Responsive adjustments */
+@media(max-width:1024px){
+  .categories {
+    gap: 12px;
+    padding: 8px 15px;
+  }
+  #priceRange { width: 130px; }
+  #priceValue { min-width: 70px; font-size:13px; }
+  #resetFilter { padding:4px 10px; font-size:13px; }
+}
+
+@media(max-width:768px){
+  .categories {
+    gap: 8px;
+    padding: 6px 10px;
+  }
+  #priceRange { width: 120px; }
+  #priceValue { min-width: 60px; font-size:12px; }
+  #resetFilter { padding:3px 8px; font-size:12px; }
+}
+
+/* ===== PRODUCTS GRID ===== */
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 products per row on desktop */
+  gap: 25px; /* spacing between products */
+  padding: 20px 40px;
+  overflow-x: visible; /* remove horizontal scroll */
+}
+
+/* Responsive for tablets */
+@media(max-width:1024px){
+  .products { 
+    grid-template-columns: repeat(2, 1fr); /* 2 per row on tablets */
+  }
+}
+
+/* Responsive for mobile */
+@media(max-width:768px){
+  .products { 
+    grid-template-columns: 1fr; /* 1 per row on mobile */
+  }
+}
+
+/* ===== SCROLLBAR (optional if grid overflows) ===== */
+.products::-webkit-scrollbar {
+  height: 8px;
+}
+.products::-webkit-scrollbar-thumb {
+  background: #498ff1;
+  border-radius: 4px;
+}
+.products::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+/* ===== PRODUCT CARD ===== */
+.card { 
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover { 
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.img-link {
+  display: block;
+}
+
+.img-link img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.card img { 
+  width: 100%;
+  height: 220px; /* make image taller */
+  object-fit: cover;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.card img:hover { 
+  transform: scale(1.05);
+}
+
+.card h3 { 
+  font-size: 16px; 
+  margin: 10px 0 5px; 
+  color: #333;
+}
+
+.card .short-desc { 
+  font-size: 13px; 
+  color: #666; 
+  margin-bottom: 5px; 
+}
+
+.price-box { 
+  margin: 8px 0; 
+}
+
+.mrp { 
+  color: rgb(240,186,87); 
+  text-decoration: line-through; 
+  font-size: 14px; 
+  margin-right: 6px; 
+}
+
+.discount { 
+  color: #498ff1; 
+  font-weight: bold; 
+  font-size: 17px; 
+}
+
+/* ===== BUTTONS ===== */
+.actions { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  margin-top: 8px; 
+}
+
+.view-btn, .btn { 
+  flex: 1; 
+  padding: 8px 12px; 
+  border-radius: 6px; 
+  border: none; 
+  background: #498ff1; 
+  color: #fff; 
+  font-size: 14px; 
+  transition: 0.3s; 
+}
+
+.view-btn:hover, .btn:hover { background: #2b5fcf; }
+
+.add-wish { background: #ff4081; }
+.add-wish:hover { background: #e73372; }
+
+/* ===== SIZE BOX ===== */
+.size-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0; }
+.size-btn { border: 1px solid #498ff1; padding: 4px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; background: #fff; min-width: 40px; text-align: center; transition: 0.2s; }
+.size-btn.active { background: #498ff1; color: #fff; }
+.size-btn:hover { background: #498ff1; color: #fff; }
+</style>
+<script>// ==================== FILTER JS ====================
+
+// Get all elements
+const categoryCheckboxes = document.querySelectorAll('.cat-filter');
+const priceRange = document.getElementById('priceRange');
+const priceValue = document.getElementById('priceValue');
+const resetBtn = document.getElementById('resetFilter');
+const productCards = document.querySelectorAll('.products .card');
+
+// Calculate min and max prices dynamically
+let maxPrice = 0;
+let minPrice = Infinity;
+
+productCards.forEach(card => { 
+    const p = parseFloat(card.dataset.baseprice); // use baseprice
+    if(p > maxPrice) maxPrice = p;
+    if(p < minPrice) minPrice = p;
+});
+
+// Set priceRange attributes
+priceRange.min = minPrice;
+priceRange.max = maxPrice;
+priceRange.value = maxPrice;
+
+// Show initial price range
+priceValue.textContent = `₹${minPrice} - ₹${maxPrice}`;
+
+// Filter function
+function filterProducts(){
+    const selectedCats = Array.from(categoryCheckboxes)
+                               .filter(cb => cb.checked)
+                               .map(cb => cb.value);
+    const maxP = parseFloat(priceRange.value);
+
+    productCards.forEach(card => {
+        const cat = card.dataset.category;
+        const price = parseFloat(card.dataset.baseprice);
+
+        const catMatch = selectedCats.length === 0 || selectedCats.includes(cat);
+        const priceMatch = price >= minPrice && price <= maxP;
+
+        card.style.display = (catMatch && priceMatch) ? 'flex' : 'none';
+    });
+}
+
+// Event listeners
+categoryCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+
+priceRange.addEventListener('input', () => {
+    priceValue.textContent = `₹${minPrice} - ₹${priceRange.value}`;
+    filterProducts();
+});
+
+resetBtn.addEventListener('click', () => {
+    categoryCheckboxes.forEach(cb => cb.checked = false);
+    priceRange.value = maxPrice;
+    priceValue.textContent = `₹${minPrice} - ₹${maxPrice}`;
+    filterProducts();
+});
+</script>

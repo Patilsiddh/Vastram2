@@ -7,8 +7,7 @@
   font-family: 'Roboto', sans-serif; 
 }
 
-body {
-     
+body { 
   background: #f8f8f8; 
   color: #333; 
   line-height: 1.6; 
@@ -47,14 +46,11 @@ input, textarea {
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:14px 50px;
+    padding:14px 40px; /* slightly balanced */
 
-    /* Light brown gradient */
     background: linear-gradient(135deg, #f5e6d3, #d2a679);
-
-    /* Transparent glass effect */
     backdrop-filter: blur(10px);
-    background-color: rgba(210, 166, 121, 0.8);
+    background-color: rgba(210, 166, 121, 0.85);
 
     color:#2b2b2b;
 
@@ -72,15 +68,15 @@ input, textarea {
     box-shadow:0 6px 20px rgba(0,0,0,0.15);
 }
 
-/* LEFT LOGO AREA */
+/* LEFT LOGO */
 .arv-brand{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:10px;
 }
 
 .arv-brand img{
-    height:55px; /* bigger logo */
+    height:50px;
     transition: transform 0.3s ease;
 }
 
@@ -88,32 +84,28 @@ input, textarea {
     transform: scale(1.1);
 }
 
-/* BRAND NAME */
 .arv-brand-name{
-    font-size:22px;
+    font-size:20px;
     font-weight:700;
     color:#3b2a1a;
-    letter-spacing:1px;
 }
 
-/* MENU LINKS */
+/* MENU CENTER */
 .arv-menu{
     display:flex;
     align-items:center;
-    gap:25px;
+    gap:28px;
 }
 
-/* LINKS STYLE */
+/* LINKS */
 .arv-menu a{
     color:#1e1a16;
-    text-decoration:none;
-    font-size:16px;
+    font-size:15px;
     font-weight:500;
     position:relative;
-    transition: all 0.3s ease;
 }
 
-/* HOVER EFFECT (underline animation) */
+/* UNDERLINE EFFECT */
 .arv-menu a::after{
     content:"";
     position:absolute;
@@ -129,19 +121,29 @@ input, textarea {
     width:100%;
 }
 
-/* HOVER COLOR CHANGE */
 .arv-menu a:hover{
     color:#8b5e34;
+}
+
+/* 👉 CART & WISHLIST (DESKTOP UPGRADE) */
+.arv-menu a[href="/wishlist"],
+.arv-menu a[href="/cart"]{
+    background:#fff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:15px;
+    font-weight:600;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
 /* BADGE */
 .arv-badge{
     background:#ff4d4d;
     color:white;
-    padding:3px 7px;
+    padding:2px 6px;
     border-radius:50%;
-    font-size:12px;
-    margin-left:5px;
+    font-size:11px;
+    margin-left:4px;
 }
 
 /* HAMBURGER */
@@ -149,18 +151,18 @@ input, textarea {
     display:none;
     flex-direction:column;
     cursor:pointer;
-    gap:5px;
+    gap:6px;
 }
 
 .arv-hamburger span{
-    width:26px;
+    width:28px;
     height:3px;
     background:#3b2a1a;
     border-radius:3px;
     transition:0.3s;
 }
 
-/* HAMBURGER ANIMATION */
+/* ANIMATION */
 .arv-hamburger.active span:nth-child(1){
     transform: rotate(45deg) translate(5px,5px);
 }
@@ -171,43 +173,81 @@ input, textarea {
     transform: rotate(-45deg) translate(6px,-6px);
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 @media(max-width:768px){
 
+.arv-navbar{
+    padding:12px 15px;
+}
+
+/* LOGO */
+.arv-brand img{
+    height:40px;
+}
+
+.arv-brand-name{
+    font-size:16px;
+}
+
+/* MENU DROPDOWN */
 .arv-menu{
     position:absolute;
-    top:75px;
+    top:70px;
     right:0;
-
-    /* Soft brown card */
     background: linear-gradient(135deg, #f5e6d3, #d2a679);
-
     flex-direction:column;
     width:240px;
     padding:20px;
-
     display:none;
     border-radius:0 0 0 15px;
-
     box-shadow:0 8px 25px rgba(0,0,0,0.2);
-
     animation: slideDown 0.3s ease;
 }
 
+/* MENU LINKS */
 .arv-menu a{
     padding:10px 0;
     border-bottom:1px solid rgba(0,0,0,0.1);
 }
 
+/* SHOW MENU */
 .arv-menu.active{
     display:flex;
 }
 
+/* SHOW HAMBURGER */
 .arv-hamburger{
     display:flex;
 }
 
-/* Animation */
+/* 👉 REMOVE CART/WISHLIST FROM MENU */
+.arv-menu a:nth-child(6),
+.arv-menu a:nth-child(7){
+    display:none;
+}
+
+/* 👉 FLOATING ICON STYLE */
+.arv-menu a[href="/wishlist"],
+.arv-menu a[href="/cart"]{
+    position:fixed;
+    top:15px;
+    font-size:20px;
+    background:#fff;
+    padding:6px 10px;
+    border-radius:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* POSITION */
+.arv-menu a[href="/wishlist"]{
+    right:90px;
+}
+
+.arv-menu a[href="/cart"]{
+    right:30px;
+}
+
+/* ANIMATION */
 @keyframes slideDown{
     from{
         opacity:0;
@@ -222,11 +262,9 @@ input, textarea {
 }
 </style>
 
-
 <div class="arv-navbar">
 
 <!-- LEFT SIDE LOGO -->
-
 <div class="arv-brand">
 <a href="/">
 <img src="{{ url_for('static', filename='uploads/Logo-removebg-preview.png') }}">
@@ -234,30 +272,27 @@ input, textarea {
 <div class="arv-brand-name">A R Vastram</div>
 </div>
 
-
-<!-- RIGHT MENU -->
-
+<!-- RIGHT MENU (ONLY NAV LINKS) -->
 <div class="arv-menu" id="arvMenu">
-
 <a href="/">Home</a>
 <a href="/shop">Shop</a>
 <a href="#about">About</a>
 <a href="#testimonials">Testimonials</a>
 <a href="#contact">Contact</a>
+</div>
 
+<!-- ALWAYS VISIBLE ICONS -->
+<div class="arv-icons">
 <a href="/wishlist">
-Wishlist 🧡 <span id="wishCount">{{ wish_count or 0 }}</span>
+🧡 <span id="wishCount">{{ wish_count or 0 }}</span>
 </a>
 
 <a href="/cart">
-Cart 🛍️ <span id="cartCount">0</span>
+🛍️ <span id="cartCount">0</span>
 </a>
-
 </div>
 
-
 <!-- HAMBURGER -->
-
 <div class="arv-hamburger" id="arvHamburger">
 <span></span>
 <span></span>
@@ -265,7 +300,6 @@ Cart 🛍️ <span id="cartCount">0</span>
 </div>
 
 </div>
-
 
 
 <script>
