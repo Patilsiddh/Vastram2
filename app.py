@@ -171,21 +171,29 @@ def product_detail(id):
 
     product = dict(row)
 
-    # GET FRONT IMAGE
+    # Calculate discount price if MRP exists
+    mrp = product.get("mrp", 0)               # Original price
+    discount_price = product.get("discount_price", 0)  # Discount amount
+    selling_price = mrp - discount_price if mrp > 0 else product.get("price", 0)
+
+    product["mrp"] = mrp
+    product["discount_price"] = discount_price
+    product["price"] = selling_price  # Final price after discount
+
     # GET ALL IMAGES FOR PRODUCT
     images = cur.execute("""
-    SELECT image_url
-    FROM product_images
-    WHERE product_id=?
-    ORDER BY
-        CASE image_type
-            WHEN 'front' THEN 1
-            WHEN 'back' THEN 2
-            ELSE 3
-        END
-""", (product["id"],)).fetchall()
+        SELECT image_url
+        FROM product_images
+        WHERE product_id=?
+        ORDER BY
+            CASE image_type
+                WHEN 'front' THEN 1
+                WHEN 'back' THEN 2
+                ELSE 3
+            END
+    """, (product["id"],)).fetchall()
 
-# Convert to list of filenames
+    # Convert to list of filenames
     product["images"] = [img["image_url"] for img in images] if images else []
 
     # Fetch sizes
@@ -208,21 +216,14 @@ def product_detail(id):
 
     con.close()
 
-    return render_template("product.html", p=product, sizes=sizes)
+   
 
-
-
-def get_cart_count():
-    con = get_db()
-    cur = con.cursor()
-
-    cur.execute("SELECT COALESCE(SUM(qty),0) FROM cart")
-    count = cur.fetchone()[0]
-
-    con.close()
-    return count
-
-
+    return render_template(
+        "product.html",
+        p=product,
+        sizes=sizes,
+        
+    )
 
 # ---------- ADD TO CART ----------from flask import flash, redirect, request, session
 from flask import flash, redirect, request, session
