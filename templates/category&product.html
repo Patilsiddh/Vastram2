@@ -161,9 +161,12 @@
 <!-- ========== CATEGORY + PRICE FILTER ========== -->
 <div class="categories">
   <strong>Filter by Category:</strong>
-  <!-- Example categories -->
-  <label><input type="checkbox" class="cat-filter" value="Jodhpuri"> Jodhpuri</label>
-  <label><input type="checkbox" class="cat-filter" value="Blazer"> Blazer</label>
+  
+  {% for cat in categories %}
+    <label>
+      <input type="checkbox" class="cat-filter" value="{{ cat[0] }}"> {{ cat[1] }}
+    </label>
+  {% endfor %}
   <strong>Price:</strong>
   <input type="range" id="priceRange" min="0" max="10000" step="10">
   <span id="priceValue">₹0 - ₹10000</span>
