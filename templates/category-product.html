@@ -20,20 +20,39 @@
 <!-- ========== PRODUCTS GRID ========== -->
 <div class="products">
   {% for p in products %}
-  <div class="card" data-category="{{ p.category }}" data-baseprice="{{ p.discount_price or p.price }}" data-id="{{ p.id }}">
-    <a href="/product/{{ p.id }}">
-  <img src="{{ url_for('static', filename='uploads/' + (p.image or 'no-image.png')) }}" alt="{{ p.name }}">
-</a>
+  <div class="card"
+     data-category="{{ p.category }}"
+     data-baseprice="{{ p.price }}"
+     data-mrp="{{ p.mrp }}"
+     data-id="{{ p.id }}">
+    <img src="{{ url_for('static', filename='uploads/' + (p.image or 'no-image.png')) }}" alt="{{ p.name }}">
     <h3>{{ p.name }}</h3>
     <p class="short-desc">{{ (p.description or '')[:80] }}</p>
     <p class="price-box">
-      {% if p.discount_price and p.mrp > p.discount_price %}
-        <span class="mrp">₹{{ p.mrp }}</span>
-        <span class="discount">₹{{ p.discount_price }}</span>
-      {% else %}
-        <span class="discount">₹{{ p.price }}</span>
-      {% endif %}
-    </p>
+  {% if p.mrp and p.price and p.mrp > p.price %}
+    
+    <span class="mrp">₹<span class="mrp-val">{{ "%.2f"|format(p.mrp) }}</span></span><br>
+
+<span class="discount">
+  ₹<span class="price-val">{{ "%.2f"|format(p.price) }}</span>
+</span><br>
+
+<span class="discount-percent">
+  (<span class="percent-val">
+    {{ ((p.mrp - p.price) / p.mrp * 100) | round(0) }}
+  </span>% OFF)
+</span><br>
+
+<span class="you-save">
+  You Save: ₹<span class="save-val">
+    {{ "%.2f"|format(p.mrp - p.price) }}
+  </span>
+</span>
+
+  {% else %}
+    <span class="discount">₹{{ "%.2f"|format(p.price) }}</span>
+  {% endif %}
+</p>
 
     {% if p.sizes %}
     <div class="size-box">
@@ -61,7 +80,10 @@
 
 
 
+
 <style>/* ==================== FILTER ==================== */
+/* ==================== FILTER WITH WRAP AND PROPER GAP ==================== */
+/* ==================== FILTER ==================== */
 /* ==================== FILTER WITH WRAP AND PROPER GAP ==================== */
 .categories {
   display: flex;
@@ -257,17 +279,116 @@
   margin: 8px 0; 
 }
 
+
+
+/* ===== PRODUCT CARD ===== */
+.product-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 0 auto 20px;        /* center horizontally with auto margin */
+  background: #fff;
+  max-width: 300px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;          /* center content */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Short description */
+.short-desc {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Price Box */
+.price-box {
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;     /* center all items */
+  align-items: center;
+  gap: 6px;                    /* spacing between price, MRP, discount */
+  margin-bottom: 10px;
+}
+
+/* Original MRP */
+.price-box .mrp {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Selling Price */
+.price-box .selling-price {
+  color: #e53935; /* red for discounted price */
+  font-size: 16px;
+}
+
+/* Discount Percent */
+.price-box .discount-percent {
+  color: #43a047; /* green */
+  font-weight: normal;
+  font-size: 14px;
+}
+
+/* You Save */
+.price-box .you-save {
+  display: block;              /* line below price row */
+  font-size: 13px;
+  color: #555;
+  margin-top: 3px;
+}
+
+/* Optional alternative classes */
 .mrp { 
   color: rgb(240,186,87); 
   text-decoration: line-through; 
   font-size: 14px; 
-  margin-right: 6px; 
 }
 
 .discount { 
   color: #498ff1; 
   font-weight: bold; 
   font-size: 17px; 
+}
+
+/* ===== RESPONSIVE ===== */
+/* Tablet */
+@media (max-width: 1024px) {
+  .product-card {
+    max-width: 220px;
+    padding: 12px;
+  }
+  .price-box {
+    font-size: 15px;
+  }
+  .price-box .mrp, .price-box .selling-price, .price-box .discount-percent {
+    font-size: 13px;
+  }
+  .price-box .you-save {
+    font-size: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .product-card {
+    max-width: 90%;          /* almost full width on mobile */
+    padding: 10px;
+  }
+  .price-box {
+    font-size: 14px;
+    flex-direction: column;  /* stack price, MRP, discount vertically */
+    gap: 4px;
+  }
+  .price-box .mrp, .price-box .selling-price, .price-box .discount-percent {
+    font-size: 14px;
+  }
+  .price-box .you-save {
+    font-size: 12px;
+  }
 }
 
 /* ===== BUTTONS ===== */
@@ -300,7 +421,7 @@
 .size-btn { border: 1px solid #498ff1; padding: 4px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; background: #fff; min-width: 40px; text-align: center; transition: 0.2s; }
 .size-btn.active { background: #498ff1; color: #fff; }
 .size-btn:hover { background: #498ff1; color: #fff; }
-</style>
+</style> 
 <script>// ==================== FILTER JS ====================
 
 // Get all elements
@@ -355,9 +476,216 @@ priceRange.addEventListener('input', () => {
 });
 
 resetBtn.addEventListener('click', () => {
+
+    // ✅ uncheck all categories
     categoryCheckboxes.forEach(cb => cb.checked = false);
+
+    // ✅ reset price slider
     priceRange.value = maxPrice;
+
+    // ✅ reset price text
     priceValue.textContent = `₹${minPrice} - ₹${maxPrice}`;
-    filterProducts();
+
+    // ✅ FORCE SHOW ALL PRODUCTS
+    productCards.forEach(card => {
+        card.style.display = 'flex';
+    });
+
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+const cartBadge=document.getElementById("cartCount");
+const wishBadge=document.getElementById("wishCount");
+
+function updateCounts(cart, wish){
+  if(cart !== null){
+    cartBadge.innerText = cart;
+  }
+  if(wish !== null){
+    wishBadge.innerText = wish;
+  }
+}
+
+/* ---------- SIZE SELECT ---------- */window.selectSize = function(el) {
+
+    // 🔁 STEP 1: Reset ALL products to original price
+    document.querySelectorAll(".card").forEach(card => {
+
+        const basePrice = parseFloat(card.dataset.baseprice || 0);
+        const baseMrp = parseFloat(card.dataset.mrp || 0);
+
+        const percent = ((baseMrp - basePrice) / baseMrp) * 100;
+        const save = baseMrp - basePrice;
+
+        // Reset UI (only if elements exist)
+        const priceEl = card.querySelector(".price-val");
+        const mrpEl = card.querySelector(".mrp-val");
+        const percentEl = card.querySelector(".percent-val");
+        const saveEl = card.querySelector(".save-val");
+
+        if(priceEl) priceEl.innerText = basePrice.toFixed(2);
+        if(mrpEl) mrpEl.innerText = baseMrp.toFixed(2);
+        if(percentEl) percentEl.innerText = Math.round(percent);
+        if(saveEl) saveEl.innerText = save.toFixed(2);
+    });
+
+    // ❌ Remove all active sizes
+    document.querySelectorAll(".size-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".selected-size").forEach(input => input.value = "");
+
+    // ✅ STEP 2: Apply selection to clicked product
+    const card = el.closest(".card");
+
+    const basePrice = parseFloat(card.dataset.baseprice || 0);
+    const baseMrp = parseFloat(card.dataset.mrp || 0);
+    const extra = parseFloat(el.dataset.extra || 0);
+
+    const newPrice = basePrice + extra;
+    const newMrp = baseMrp + extra;
+
+    const percent = ((newMrp - newPrice) / newMrp) * 100;
+    const save = newMrp - newPrice;
+
+    // Update selected product UI
+    card.querySelector(".price-val").innerText = newPrice.toFixed(2);
+    card.querySelector(".mrp-val").innerText = newMrp.toFixed(2);
+    card.querySelector(".percent-val").innerText = Math.round(percent);
+    card.querySelector(".save-val").innerText = save.toFixed(2);
+
+    // Highlight selected size
+    el.classList.add("active");
+
+    // Store selected size
+    const input = card.querySelector(".selected-size");
+    if(input) input.value = el.dataset.size;
+}
+/* ---------- ADD TO CART ---------- */
+document.querySelectorAll(".add-cart-form").forEach(form => {
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const card = form.closest(".card");
+    const pid = card.dataset.id;
+    const sizeInput = card.querySelector("input[name='size']");
+    const size = sizeInput ? sizeInput.value : "";
+
+    if(!size){
+      alert("Please select a size!");
+      return;
+    }
+
+    fetch(`/add_to_cart/${pid}`,{
+      method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+      body:`size=${size}`
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status==="success"){
+        cartBadge.innerText = data.cart_count;
+        alert(data.message || "Added to cart!");
+      }else if(data.status==="exists"){
+        alert(data.message);
+      }else{
+        alert(data.message || "Something went wrong.");
+      }
+    });
+  });
+});
+
+/* ---------- BUY NOW ---------- */
+document.querySelectorAll(".buy-now").forEach(btn=>{
+  btn.addEventListener("click",function(){
+    const card=this.closest(".card");
+    const id=this.dataset.id;
+    const sizeInput=card.querySelector(".selected-size");
+    const size=sizeInput?sizeInput.value:"";
+
+    if(sizeInput && !size){
+      alert("Please select size");
+      return;
+    }
+
+    window.location.href=`/buy_now/${id}?size=${size}`;
+  });
+});
+
+/* ---------- WISHLIST ---------- */
+document.querySelectorAll(".add-wish").forEach(btn => {
+  btn.addEventListener("click", function(){
+    const id = this.dataset.id;
+
+    fetch(`/add_wishlist/${id}`,{
+      headers:{ "X-Requested-With":"XMLHttpRequest" }
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status === "success"){
+        updateCounts(null, data.wish);
+        alert(data.message || "Added to wishlist!");
+        this.innerText = "Added ✔";
+        this.disabled = true;
+        this.style.background = "#ff4081";
+      } else {
+        alert(data.message || "Something went wrong.");
+      }
+    });
+  });
+});
+
+/* ---------- COUNTS ---------- */
+fetch("/counts")
+.then(res=>res.json())
+.then(data=>{
+  updateCounts(data.cart,data.wish);
+});
+
+/* ---------- CAROUSEL ---------- */
+const slides = document.getElementById("slides");
+let imgs = document.querySelectorAll(".slides img");
+const total = imgs.length;
+const clone = imgs[0].cloneNode(true);
+slides.appendChild(clone);
+imgs = document.querySelectorAll(".slides img");
+let index = 0;
+
+function moveNext(){
+  index++;
+  slides.style.transition = "transform 0.7s ease";
+  slides.style.transform = `translateX(-${index*100}%)`;
+  if(index === total){
+    setTimeout(()=>{
+      slides.style.transition="none";
+      slides.style.transform = "translateX(0)";
+      index=0;
+    },700);
+  }
+}
+
+function movePrev(){
+  if(index ===0){
+    index=total;
+    slides.style.transition="none";
+    slides.style.transform = `translateX(-${index*100}%)`;
+    setTimeout(()=>{
+      index--;
+      slides.style.transition="transform 0.7s ease";
+      slides.style.transform = `translateX(-${index*100}%)`;
+    },50);
+  }else{
+    index--;
+    slides.style.transition="transform 0.7s ease";
+    slides.style.transform = `translateX(-${index*100}%)`;
+  }
+}
+
+document.querySelector(".right").addEventListener("click",moveNext);
+document.querySelector(".left").addEventListener("click",movePrev);
+setInterval(moveNext,4000);
+
+});
+
+</script> 
