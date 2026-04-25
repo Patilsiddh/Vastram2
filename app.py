@@ -219,10 +219,8 @@ def get_all_products():
     return products
 
 
-import json
-@app.route("/favicon.ico")
-def favicon():
-    return "", 204
+
+
 @app.route("/get_reviews/<int:pid>")
 def get_reviews(pid):
 
@@ -571,10 +569,9 @@ def add_product():
 # ===============================
 
 
-@app.route('/favicon.ico')
+@app.route('/favicon.ico', endpoint='favicon_icon')
 def favicon():
     return send_from_directory('static', 'favicon.ico')
-
 
 
 # ---------- ADMIN ----------
