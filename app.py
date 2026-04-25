@@ -39,6 +39,14 @@ def init_db():
     con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
+    cur.execute("DROP TABLE IF EXISTS products")
+    cur.execute("DROP TABLE IF EXISTS product_sizes")
+    cur.execute("DROP TABLE IF EXISTS product_images")
+    cur.execute("DROP TABLE IF EXISTS categories")
+    cur.execute("DROP TABLE IF EXISTS cart")
+    cur.execute("DROP TABLE IF EXISTS orders")
+    cur.execute("DROP TABLE IF EXISTS order_items")
+    cur.execute("DROP TABLE IF EXISTS reviews")
     # CREATE TABLES IF NOT EXISTS
     cur.execute("""
     CREATE TABLE IF NOT EXISTS products (
@@ -164,8 +172,8 @@ def get_all_products():
 
     rows = cur.execute("""
         SELECT id, name, category, price, mrp, discount_price, stock,
-               description, cloth_type, material, occasion, color,
-               size, status
+       description, cloth_type, material, occasion, color,
+       status
         FROM products
         WHERE status='active'
         ORDER BY id DESC
@@ -212,7 +220,9 @@ def get_all_products():
 
 
 import json
-
+@app.route("/favicon.ico")
+def favicon():
+    return "", 204
 @app.route("/get_reviews/<int:pid>")
 def get_reviews(pid):
 
