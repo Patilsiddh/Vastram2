@@ -1,12 +1,11 @@
-from itertools import product
 import os
-import pandas as pd
-from datetime import datetime
-import sqlite3
 import json
 import uuid
-from turtle import color
+import sqlite3
 import pandas as pd
+from datetime import datetime
+from itertools import product
+
 from flask import (
     Flask,
     flash,
@@ -16,14 +15,15 @@ from flask import (
     session,
     jsonify,
     send_file,
-    url_for
+    url_for,
+    send_from_directory
 )
+
+from werkzeug.utils import secure_filename
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from werkzeug.utils import secure_filename
-from flask import send_from_directory
-
 # ===============================
 # APP INIT
 # ===============================
