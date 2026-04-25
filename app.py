@@ -33,7 +33,7 @@ app.secret_key = "ethnic123"
 
 UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+DB_PATH = "/tmp/store.db"
 # ===============================
 # DB CONNECTION
 # ===============================
