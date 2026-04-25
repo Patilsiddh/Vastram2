@@ -34,6 +34,106 @@ app.secret_key = "ethnic123"
 UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 DB_PATH = "/tmp/store.db"
+
+def init_db():
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
+
+    # CREATE TABLES IF NOT EXISTS
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        price REAL,
+        mrp REAL,
+        discount_price REAL,
+        stock INTEGER DEFAULT 0,
+        description TEXT,
+        cloth_type TEXT,
+        material TEXT,
+        occasion TEXT,
+        color TEXT,
+        category INTEGER,
+        status TEXT DEFAULT 'active',
+        position INTEGER DEFAULT 0
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS categories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS product_images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER,
+        image_type TEXT,
+        image_url TEXT,
+        label TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS product_sizes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER,
+        size TEXT,
+        stock INTEGER,
+        extra_price REAL
+    )
+    """)
+    cur.execute("""
+CREATE TABLE IF NOT EXISTS order_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER,
+    product_id INTEGER,
+    product_name TEXT,
+    price REAL,
+    quantity INTEGER,
+    size TEXT
+)
+""")
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS cart (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER,
+        size TEXT,
+        price REAL,
+        qty INTEGER
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        customer_name TEXT,
+        phone TEXT,
+        total REAL,
+        payment_method TEXT,
+        status TEXT
+    )
+    """)
+    cur.execute("""
+CREATE TABLE IF NOT EXISTS reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER,
+    name TEXT,
+    rating INTEGER,
+    review TEXT,
+    images TEXT,
+    created_at TEXT
+)
+""")
+
+    con.commit()
+    con.close()
+
+# run once on startup
+init_db()
 # ===============================
 # DB CONNECTION
 # ===============================
@@ -156,7 +256,7 @@ def home():
     return render_template("index.html", products=products, categories=categories)
 
 
-# ---------- PRODUCT DETAIL ----------@app.route("/product/<int:id>")
+# ---------- PRODUCT DETAIL ----------
 @app.route("/product/<int:id>")
 def product_detail(id):
     con = get_db()
