@@ -38,10 +38,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # DB CONNECTION
 # ===============================
 def get_db():
-    con = sqlite3.connect("store.db", timeout=30, check_same_thread=False)
+    con = sqlite3.connect(
+        DB_PATH,
+        timeout=30,
+        check_same_thread=False
+    )
     con.row_factory = sqlite3.Row
-    con.execute("PRAGMA journal_mode=WAL;")
-    con.execute("PRAGMA synchronous=NORMAL;")
     return con
 
 # ===============================
